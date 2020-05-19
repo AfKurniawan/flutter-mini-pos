@@ -1,4 +1,4 @@
-package com.example.day12_login
+package id.smartpos.mysmartpos
 
 import android.os.Bundle
 
