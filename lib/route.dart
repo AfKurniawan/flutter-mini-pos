@@ -5,6 +5,7 @@ import 'package:flutter_deltaprima_pos/src/login/pages/login.dart';
 import 'package:flutter_deltaprima_pos/src/register/pages/register.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/create_shop.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/shop_home.dart';
+import 'package:flutter_deltaprima_pos/src/shop/pages/shop_list.dart';
 
 class MyRoute{
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -13,7 +14,7 @@ class MyRoute{
 
       switch (settings.name){
         case '/':
-          return MaterialPageRoute(builder: (_) => CreateShopPage());
+          return MaterialPageRoute(builder: (_) => ShopListPage());
         case '/login':
           return MaterialPageRoute(builder: (_) => LoginPage());
         case '/register':
@@ -24,6 +25,8 @@ class MyRoute{
           return MaterialPageRoute(builder: (_) => CreateShopPage());
         case '/shop_home' :
           return MaterialPageRoute(builder: (context) => ShopHomePage(name: args.dancuk));
+        case '/shop_list' :
+          return MaterialPageRoute(builder: (_) => ShopListPage());
       }
   }
 }

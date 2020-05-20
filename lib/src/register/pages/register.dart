@@ -39,6 +39,8 @@ class _RegisterPageState extends State<RegisterPage> {
     isLoading = false;
   }
 
+
+
   void signUpAction() async {
     registerApiService.register(Api.REGISTER_URL, {
       'full_name': controllerFullName.text,

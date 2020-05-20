@@ -30,6 +30,7 @@ dependencies:
   google_fonts: ^0.3.9
   geolocator: ^3.0.1
   google_maps_flutter: ^0.5.25
+  sticky_headers: ^0.1.8
 
 dev_dependencies:
   flutter_test:

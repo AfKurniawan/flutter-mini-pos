@@ -71,28 +71,29 @@ class _CreateShopPageState extends State<CreateShopPage> {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       fullName = prefs.getString('fullname');
-      firstName = fullName.substring(0, fullName.indexOf(" "));
-      print("Nama Substring $firstName");
+      //firstName = fullName.substring(0, fullName.indexOf(" "));
+      print("Nama Substring $fullName, $userid");
       userid = prefs.getString('userid');
-
     });
   }
+
 
   void createShopAction() async {
     createShopService.createShop(Api.CREATE_SHOP_URL, {
       'name': controllerShopName.text,
       'address': controllerShopAddress.text,
       'phone': controllerShopPhone.text,
-      'user_id': '2'
+      'user_id': userid
     }).then((response) async {
       prefs = await SharedPreferences.getInstance();
       if (response.error == false) {
         setState(() {
           isLoading = false;
           shopname = response.shop.name;
-          print("Nama Toko dari Response $shopname");
+          print("Nama Toko dari Response $shopname, milik userID $userid");
 
-          Navigator.pushNamed(context, '/shop_home', arguments: RouteArguments(shopname));
+          //Navigator.pushNamed(context, '/shop_home', arguments: RouteArguments(shopname));
+          Navigator.pushReplacementNamed(context, '/shop_list');
 
         });
       } else if (response.messages == 'isExist') {
@@ -390,7 +391,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
                           Flexible(
                             flex: 2,
                             child: Text(
-                              "$firstName",
+                              "$fullName",
                               //textAlign: TextAlign.left,
                               style: TextStyle(
                                   color: Colors.green[400],

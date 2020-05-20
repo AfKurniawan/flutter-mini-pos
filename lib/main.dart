@@ -5,6 +5,7 @@ import 'package:flutter_deltaprima_pos/src/register/pages/register.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_model.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/create_shop.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/shop_home.dart';
+import 'package:flutter_deltaprima_pos/style/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       onGenerateRoute: MyRoute.generateRoute,
+      theme: AppTheme.lightTheme,
 
       supportedLocales: [
         Locale('en', 'US'),

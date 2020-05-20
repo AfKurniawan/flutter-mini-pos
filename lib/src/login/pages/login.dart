@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     print("Login value from preferences is ${prefs.getBool('isLogin')}");
       if(prefs.getBool('isLogin') == true){
         setState(() {
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacementNamed(context, '/shop_list');
           print("Login status in Login Page $isLogin");
         });
 
