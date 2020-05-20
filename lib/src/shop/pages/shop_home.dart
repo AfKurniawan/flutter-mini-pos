@@ -40,7 +40,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      //bottomNavigationBar: myBottomBar(),
+      bottomNavigationBar: myBottomBar(),
     );
   }
 

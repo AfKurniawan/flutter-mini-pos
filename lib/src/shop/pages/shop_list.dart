@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_deltaprima_pos/src/shop/services/get_shop_list_service.dart';
+import 'package:flutter_deltaprima_pos/src/shop/widget/custom_float.dart';
 import 'package:flutter_deltaprima_pos/src/shop/widget/shop_item_widget.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
 import 'package:flutter_deltaprima_pos/style/text_styles.dart';
@@ -45,7 +46,7 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Future<List<Shops>> getShopList() async {
     var res = await http.post(Uri.encodeFull(Api.GET_SHOP_LIST),
-        headers: {"Accept": "application/json"}, body: {'userid': '1'});
+        headers: {"Accept": "application/json"}, body: {'userid': userid});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       var rest = data["shops"] as List;
@@ -62,9 +63,55 @@ class _ShopListPageState extends State<ShopListPage> {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: Theme.of(context).backgroundColor,
-
-      body: singleChildScrollView()
+      body: singleChildScrollView(),
       //body: customScrollView(),
+      floatingActionButton: CustomFloat(
+      icon: Icons.add,
+      qrCallback: (){
+        print("Button Clicked Cuk");
+        Navigator.pushReplacementNamed(context, '/create_shop');
+      },
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: myBottomBar(),
+    );
+  }
+
+  Widget myBottomBar(){
+    return BottomAppBar(
+      clipBehavior: Clip.antiAlias,
+      shape: CircularNotchedRectangle(),
+      child: Ink(
+        height: 50,
+        decoration: new BoxDecoration(
+            gradient: new LinearGradient(colors: AppTheme.kitGradients)
+        ),
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 50,
+                width: 150,
+                child: Icon(Icons.person_outline, color: Colors.white),
+              ),
+            ),
+            new SizedBox(
+              width: 20.0,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 50,
+                width: 150,
+                child: Icon(Icons.shopping_cart, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -76,7 +123,7 @@ class _ShopListPageState extends State<ShopListPage> {
             children: <Widget>[
               header(),
               searchField(),
-              category(),
+              //category(),
               newShopList(),
               futureBuilder()
             ],
