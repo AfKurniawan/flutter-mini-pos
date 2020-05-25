@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_deltaprima_pos/configs/route_arguments.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
 import 'package:flutter_deltaprima_pos/style/extention.dart';
@@ -63,7 +64,9 @@ class _ShopItemWidgetState extends State<ShopItemWidget> {
           ),
         ),
       ).ripple(() {
-        //Navigator.pushNamed(context, "/DetailPage", arguments: model);
+        //Navigator.pushNamed(context, "/shop_home", arguments: widget.shops.id);
+       // Navigator.pushNamed(context, '/shop_detail', arguments: widget.shops);
+        Navigator.pushNamed(context, "/products", arguments: widget.shops);
       }, borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }

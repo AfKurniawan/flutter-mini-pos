@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_deltaprima_pos/src/shop/widget/custom_float.dart';
 import 'package:flutter_deltaprima_pos/style/theme.dart';
 
 class ShopHomePage extends StatefulWidget {
 
-   final String name;
+   final Shops model;
 
 
   ShopHomePage({
     Key key,
-    @required this.name
+    @required this.model
   }) : super(key: key);
 
   @override
@@ -17,6 +18,14 @@ class ShopHomePage extends StatefulWidget {
 }
 
 class _ShopHomePageState extends State<ShopHomePage> {
+
+  Shops shopmodel;
+
+  @override
+  void initState() {
+    shopmodel = widget.model;
+    super.initState();
+  }
 
 
   @override
@@ -28,7 +37,10 @@ class _ShopHomePageState extends State<ShopHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(widget.name)
+              Text(shopmodel.id),
+              Text(shopmodel.name),
+              Text(shopmodel.phone),
+              Text(shopmodel.address),
             ],
           ),
         ),
@@ -73,7 +85,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
             child: Icon(Icons.arrow_back_ios, color: Colors.white)),
         backgroundColor: Colors.blue[400],
         elevation: 3,
-        title: Text(widget.name, style: TextStyle(
+        title: Text(shopmodel.name, style: TextStyle(
             fontWeight: FontWeight.w300, color: Colors.white, fontSize: 24
         )),
         centerTitle: true,

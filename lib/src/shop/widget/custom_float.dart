@@ -13,6 +13,7 @@ class CustomFloat extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       clipBehavior: Clip.antiAlias,
+      elevation: 6,
       mini: isMini,
       onPressed: qrCallback,
       child: Ink(
@@ -25,17 +26,6 @@ class CustomFloat extends StatelessWidget {
               icon,
               color: Colors.white,
             ),
-            builder != null
-                ? Positioned(
-                    right: 7.0,
-                    top: 7.0,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.red,
-                      child: builder,
-                      radius: 10.0,
-                    ),
-                  )
-                : Container(),
             // builder
           ],
         ),

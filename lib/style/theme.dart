@@ -7,7 +7,7 @@ class AppTheme {
   const AppTheme();
   static ThemeData lightTheme = ThemeData(
       backgroundColor: LightColor.background,
-      primaryColor: LightColor.purple,
+      primaryColor: LightColor.purpleLight,
       cardTheme: CardTheme(color: LightColor.background),
       textTheme: TextTheme(display1: TextStyle(color: LightColor.black)),
       iconTheme: IconThemeData(color: LightColor.iconColor),
@@ -44,10 +44,12 @@ class AppTheme {
   }
 
   static List<Color> kitGradients = [
+    Color.fromRGBO(143, 148, 251, 1),
+    Color.fromRGBO(143, 148, 251, .6),
     // new Color.fromRGBO(103, 218, 255, 1.0),
     // new Color.fromRGBO(3, 169, 244, 1.0),
     // new Color.fromRGBO(0, 122, 193, 1.0),
-    Colors.blueGrey.shade800,
-    Colors.black87,
+//    Colors.blueGrey.shade800,
+//    Colors.black87,
   ];
 }

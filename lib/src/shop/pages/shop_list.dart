@@ -46,7 +46,7 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Future<List<Shops>> getShopList() async {
     var res = await http.post(Uri.encodeFull(Api.GET_SHOP_LIST),
-        headers: {"Accept": "application/json"}, body: {'userid': userid});
+        headers: {"Accept": "application/json"}, body: {'userid': '1'});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       var rest = data["shops"] as List;
@@ -61,19 +61,19 @@ class _ShopListPageState extends State<ShopListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+     // appBar: appBar(),
       backgroundColor: Theme.of(context).backgroundColor,
       body: singleChildScrollView(),
       //body: customScrollView(),
-      floatingActionButton: CustomFloat(
-      icon: Icons.add,
-      qrCallback: (){
-        print("Button Clicked Cuk");
-        Navigator.pushReplacementNamed(context, '/create_shop');
-      },
-    ),
-    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: myBottomBar(),
+//      floatingActionButton: CustomFloat(
+//      icon: Icons.add,
+//      qrCallback: (){
+//        print("Button Clicked Cuk");
+//        Navigator.pushReplacementNamed(context, '/create_shop');
+//      },
+//    ),
+   // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //bottomNavigationBar: myBottomBar(),
     );
   }
 
@@ -145,7 +145,7 @@ class _ShopListPageState extends State<ShopListPage> {
             ],
           ),
         ),
-        shopList()
+        //shopList()
       ],
     );
   }
@@ -163,28 +163,6 @@ class _ShopListPageState extends State<ShopListPage> {
                 color: Color.fromRGBO(143, 148, 251, 1),
               ),
               onPressed: () {})
-        ],
-      ),
-    );
-  }
-
-  Widget shopList() {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("Top Doctors", style: TextStyles.title.bold),
-              IconButton(
-                  icon: Icon(
-                    Icons.sort,
-                    color: Color.fromRGBO(143, 148, 251, 1),
-                  ),
-                  onPressed: () {})
-            ],
-          ).hP16,
-          Center(child: futureBuilder())
         ],
       ),
     );
