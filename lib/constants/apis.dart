@@ -6,4 +6,5 @@ class Api {
   static const String CREATE_SHOP_URL = BASE_URL + "createshop";
   static const String GET_SHOP_LIST = BASE_URL + "getShopList";
   static const String GET_PRODUCTS_DETAIL = BASE_URL + "getproducts";
+  static const String GET_CART_LIST = BASE_URL + "getCartList";
 }

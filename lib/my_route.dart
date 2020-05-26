@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/custom_route.dart';
 import 'package:flutter_deltaprima_pos/main_screen.dart';
+import 'package:flutter_deltaprima_pos/src/cart/pages/cart.dart';
 import 'package:flutter_deltaprima_pos/src/home/pages/home.dart';
 import 'package:flutter_deltaprima_pos/src/products/pages/scan_products.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/shop_details.dart';
@@ -10,6 +11,7 @@ class Routes {
     return <String, WidgetBuilder>{
       '/': (_) => MainScreen(),
       '/home': (_) => Homepage(),
+      '/cart_page' : (_) => CartPage()
     };
   }
 

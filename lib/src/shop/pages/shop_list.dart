@@ -174,21 +174,15 @@ class _ShopListPageState extends State<ShopListPage> {
         builder: (context, snapshot) {
           return snapshot.data != null
               ? buildListView(snapshot.data)
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new SizedBox(
-                          width: 20.0,
-                          height: 20.0,
-                          child: const CircularProgressIndicator(
-                            value: null,
-                            strokeWidth: 1.0,
-                          )),
-                    ],
+              : Container(
+                height: MediaQuery.of(context).size.height /2,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 1.0,
                   ),
-                );
+                ),
+              );
         });
   }
 

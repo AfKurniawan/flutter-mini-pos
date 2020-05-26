@@ -7,6 +7,7 @@ import 'package:flutter_deltaprima_pos/src/products/models/products.dart';
 import 'package:flutter_deltaprima_pos/src/products/services/get_products_service.dart';
 import 'package:flutter_deltaprima_pos/src/products/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
+import 'package:flutter_deltaprima_pos/style/light_color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +53,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   getPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
+      prefs.setString('shopid', model.id);
       print("Nama Substring, $userid");
       userid = prefs.getString('userid');
       startBarcodeScanStream();
@@ -139,22 +141,27 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
+            color: LightColor.grey,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: barcode == "" ? barcodeKosong() : appBarTitle(),
-        elevation: 0.0,
+        elevation: 0.5,
         actions: <Widget>[
           IconButton(
             icon: IconBadge(
               icon: Icons.shopping_cart,
               size: 26.0,
             ),
-            onPressed: () {},
+            color: LightColor.grey,
+            onPressed: () {
+              Navigator.pushNamed(context, "/cart_page");
+            },
           ),
         ],
       ),
@@ -182,11 +189,11 @@ class _ProductDetailsState extends State<ProductDetails> {
     if (errorBarcode == true) {
       return Container(
         child: Center(
-          child: Text("Barcode belum terdaftar"),
+          child: Text("Barcode belum terdaftar", style: TextStyle(color: Colors.black),),
         ),
       );
     } else {
-      return Text("$name");
+      return Text("$name", style: TextStyle(color: Colors.black),);
     }
   }
 
