@@ -24,6 +24,7 @@
   "title_register_dialog_success": "Yaay... Pendaftaran Berhasil",
   "description_register_dialog_success": "Lanjut ke halaman berikutnya Yuk...",
   "button_register_dialog_success": "Yup",
+  "button_negative_success": "Cancel",
 
   "title_register_dialog_user_exist": "Yaah... Pendaftaran Gagal nih",
   "description_register_dialog_user_exist": "Email dan Telepon sudah pernah didaftarkan nih",
@@ -45,7 +46,8 @@
   "hint_register_shop_kodepos": "Kode Pos",
   "hint_register_shop_phone": "Telp/HP. Toko",
 
-  "appbar_create_shop": "Buat Toko Baru"
+  "appbar_create_shop": "Buat Toko Baru",
+  "hint_quantity" : "Quantity"
 
 
 

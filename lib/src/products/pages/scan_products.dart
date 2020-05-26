@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
+import 'package:flutter_deltaprima_pos/localization/localization.dart';
 import 'package:flutter_deltaprima_pos/src/products/models/products.dart';
 import 'package:flutter_deltaprima_pos/src/products/services/get_products_service.dart';
+import 'package:flutter_deltaprima_pos/src/products/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
+
 
 class ProductDetails extends StatefulWidget {
   ProductDetails({Key key, this.model}) : super(key: key);
@@ -30,6 +36,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   String variant;
   bool isNotFound;
   String userid;
+  bool isNotScanned;
+  bool errorBarcode;
 
   @override
   void initState() {
@@ -39,6 +47,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     getPrefs();
 
   }
+
 
   getPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -55,6 +64,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     setState(() {
       barcode = takeBarcode;
       print("Barcode $barcode");
+      Vibration.vibrate(duration: 100);
       getDetailProducts();
     });
   }
@@ -68,15 +78,60 @@ class _ProductDetailsState extends State<ProductDetails> {
           images = response.item.image;
           price = response.item.sellingPrice;
           variant = response.item.variant;
-          isNotFound = false;
+          errorBarcode = false;
         });
       } else if (response.error == true) {
         print("RESPONSE MESSAGES ${response.messages}");
         setState(() {
-          isNotFound = true;
+          //isNotFound = true;
+          errorBarcode = true;
+
         });
       }
     });
+  }
+
+  void showSnackbar(){
+    Fluttertoast.showToast(
+        msg: "Product sudah dimasukkan ke Cart",
+        toastLength: Toast.LENGTH_LONG,
+        timeInSecForIosWeb: 1,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+
+    startBarcodeScanStream();
+  }
+
+  void handleSubmitted(String value) {
+   setState(() {
+     dialogSuccess(context);
+     print("TEXT FORM FIELD HANDLE");
+   });
+  }
+
+  void showToast(BuildContext context) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Added to cart'),
+        action: SnackBarAction(
+            label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  dialogSuccess(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialogSuccessAddCart(
+        title: "Berhasil",
+        description: "Produk sudah berhasil masuk di cart",
+        buttonPositiveText: AppLocalizations.of(context)
+            .translate("button_register_dialog_success"),
+        buttonNegativeText: AppLocalizations.of(context).translate("button_negative_success"),
+      ),
+    );
   }
 
   @override
@@ -91,10 +146,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: isNotFound == true ? Text("Product Not Found")
-        : Text(
-          "$name, ${model.id}, $userid",
-        ),
+        title: barcode == "" ? barcodeKosong() : appBarTitle(),
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
@@ -106,12 +158,8 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ],
       ),
-      body: barcode == ""
-          ? Container(
-              child: Center(
-              child: CircularProgressIndicator(),
-            ))
-              : body(),
+      body: barcode == "" ? barcodeKosong()
+       : body(),
       bottomNavigationBar: Container(
         height: 50.0,
         child: RaisedButton(
@@ -130,11 +178,34 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget body() {
-    if (isNotFound == true) {
+  Widget appBarTitle(){
+    if (errorBarcode == true) {
       return Container(
         child: Center(
-          child: Text("Product Not Found"),
+          child: Text("Barcode belum terdaftar"),
+        ),
+      );
+    } else {
+      return Text("$name");
+    }
+  }
+
+
+  Widget barcodeKosong(){
+    return Container(
+      child: Center(
+        child: Text("Silahkan Scan Barcode"),
+      ),
+    );
+  }
+
+
+
+  Widget body() {
+    if (errorBarcode == true) {
+      return Container(
+        child: Center(
+          child: Text("Barcode belum terdaftar"),
         ),
       );
     } else {
@@ -248,33 +319,6 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 20.0),
             Text(
-              "Product Description",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
-              maxLines: 2,
-            ),
-            SizedBox(height: 10.0),
-            Text(
-              "Nulla quis lorem ut libero malesuada feugiat. Lorem ipsum dolor "
-                  "sit amet, consectetur adipiscing elit. Curabitur aliquet quam "
-                  "id dui posuere blandit. Pellentesque in ipsum id orci porta "
-                  "dapibus. Vestibulum ante ipsum primis in faucibus orci luctus "
-                  "et ultrices posuere cubilia Curae; Donec velit neque, auctor "
-                  "sit amet aliquam vel, ullamcorper sit amet ligula. Donec"
-                  " rutrum congue leo eget malesuada. Vivamus magna justo,"
-                  " lacinia eget consectetur sed, convallis at tellus."
-                  " Vivamus suscipit tortor eget felis porttitor volutpat."
-                  " Donec rutrum congue leo eget malesuada."
-                  " Pellentesque in ipsum id orci porta dapibus.",
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
               "Quantity",
               style: TextStyle(
                 fontSize: 18,
@@ -282,11 +326,45 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               maxLines: 2,
             ),
+
+            SizedBox(height: 10),
+
+            TextFormField(
+              onFieldSubmitted: handleSubmitted,
+              autofocus: true,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              validator: RequiredValidator(
+                  errorText:
+                  AppLocalizations.of(context).translate("error_form_entry")),
+              //controller: controllerShopAddress,
+              decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey[600], width: 1.5),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey[400], width: 1.5),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  hintText: AppLocalizations.of(context)
+                      .translate("hint_quantity"),
+                  hintStyle: TextStyle(color: Colors.grey[400])),
+            ),
             SizedBox(height: 20.0),
           ],
         ),
       );
     }
   }
+
 
 }
