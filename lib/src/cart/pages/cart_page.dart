@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/src/cart/models/cart.dart';
+import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
+import 'package:flutter_deltaprima_pos/src/cart/services/total_cart_service.dart';
 import 'package:flutter_deltaprima_pos/src/cart/widget/cart_item.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_deltaprima_pos/style/extention.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
+
+
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -22,11 +25,15 @@ class _CartPageState extends State<CartPage> {
   String userid;
   String fullname;
   String shopid;
+  String totalcart = "";
+  TotalCartService totalCartService;
 
   @override
   void initState() {
     super.initState();
+    totalCartService = new TotalCartService();
     getPrefs();
+    //getTotalCart();
   }
 
   getPrefs() async {
@@ -38,6 +45,7 @@ class _CartPageState extends State<CartPage> {
       print("UserID di halaman CartListPage $userid");
       print("ShopID di halaman CartListPage $shopid");
       //getCartList();
+      getTotalCart();
     });
   }
 
@@ -54,12 +62,27 @@ class _CartPageState extends State<CartPage> {
     return cartlist;
   }
 
+  void getTotalCart() async {
+    totalCartService.getTotalCart(Api.GET_TOTAL_CART, {
+      'user_id' : userid,
+      'shop_id' : shopid
+    }).then((response){
+      if(response.error == false){
+        setState(() {
+          totalcart = response.totals.total;
+          print("Total Cart $totalcart");
+        });
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 130),
+        padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 140),
         child: ListView(
           children: <Widget>[
             SizedBox(height: 10.0),
@@ -113,6 +136,7 @@ class _CartPageState extends State<CartPage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
+            SizedBox(height: 10.0),
             futureBuilder(),
           ],
         ),
@@ -146,7 +170,7 @@ class _CartPageState extends State<CartPage> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(10.0),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide(
                           color: Colors.grey[100],
                         ),
@@ -155,7 +179,7 @@ class _CartPageState extends State<CartPage> {
                         borderSide: BorderSide(
                           color: Colors.grey[100],
                         ),
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       hintText: "Receive Amount",
                       prefixIcon: Icon(
@@ -187,8 +211,16 @@ class _CartPageState extends State<CartPage> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+                        totalcart == "" ? Text(
+                          "Menghitung",
+                          style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        ) :
                         Text(
-                          r"$ 212",
+                          "Rp.$totalcart",
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w900,
@@ -217,7 +249,9 @@ class _CartPageState extends State<CartPage> {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+
+                      },
                     ),
                   ),
                 ],

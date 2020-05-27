@@ -6,6 +6,8 @@ import 'package:flutter_deltaprima_pos/configs/app_config.dart';
 class CustomDialogSuccessAddCart extends StatelessWidget {
   final String title, description, buttonPositiveText, buttonNegativeText;
   final Image image;
+  final VoidCallback btnPositiveCallBack;
+  final VoidCallback btnNegativeCallback;
 
 
   CustomDialogSuccessAddCart({
@@ -14,6 +16,8 @@ class CustomDialogSuccessAddCart extends StatelessWidget {
     @required this.buttonPositiveText,
     @required this.buttonNegativeText,
     this.image,
+    this.btnPositiveCallBack,
+    this.btnNegativeCallback
   });
 
   @override
@@ -80,18 +84,12 @@ class CustomDialogSuccessAddCart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      //Navigator.pushReplacementNamed(context, '/create_shop');// To close the dialog
-                    },
+                    onPressed: btnNegativeCallback,
                     child: Text(buttonNegativeText),
                   ),
 
                   FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      //Navigator.pushReplacementNamed(context, '/create_shop');// To close the dialog
-                    },
+                    onPressed: btnPositiveCallBack,
                     child: Text(buttonPositiveText),
                   ),
                 ],

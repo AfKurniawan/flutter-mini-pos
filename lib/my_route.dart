@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/custom_route.dart';
 import 'package:flutter_deltaprima_pos/main_screen.dart';
-import 'package:flutter_deltaprima_pos/src/cart/pages/cart.dart';
+import 'package:flutter_deltaprima_pos/src/cart/pages/cart_page.dart';
 import 'package:flutter_deltaprima_pos/src/home/pages/home.dart';
-import 'package:flutter_deltaprima_pos/src/products/pages/scan_products.dart';
+import 'package:flutter_deltaprima_pos/src/pos/pages/pos_scan_page.dart';
+import 'package:flutter_deltaprima_pos/src/products/pages/scan_products_page.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/shop_details.dart';
 
 class Routes {
@@ -28,7 +29,12 @@ class Routes {
 
       case "products":
         return CustomRoute<bool>(
-          builder: (BuildContext context) => ProductDetails(model: settings.arguments)
+          builder: (BuildContext context) => ScanProductPage(model: settings.arguments)
+        );
+
+      case "pos_scan_product":
+        return CustomRoute<bool>(
+          builder: (BuildContext context) => PosScanPage(model: settings.arguments)
         );
 
     }

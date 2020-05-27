@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
+import 'package:flutter_deltaprima_pos/src/cart/pages/cart_page.dart';
+import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
 import 'package:flutter_deltaprima_pos/src/register/pages/register.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/create_shop.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/shop_home.dart';
@@ -22,11 +24,13 @@ class _MainScreenState extends State<MainScreen> {
   String title;
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  LabelCountService labelCountService;
 
 
   @override
   void initState() {
     super.initState();
+    labelCountService = new LabelCountService();
     _pageController = PageController();
     title = "List Toko";
   }
@@ -37,9 +41,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
 
     return WillPopScope(
       onWillPop: ()=>Future.value(false),
@@ -68,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
       onPageChanged: onPageChanged,
       children: <Widget>[
         ShopListPage(),
-        CreateShopPage()
+        CartPage()
       ],
     );
   }
@@ -153,8 +154,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           SizedBox(width: 80),
           IconButton(
-            icon: IconBadge(
-              icon: Icons.shopping_cart,
+            icon: Icon(Icons.shopping_cart,
               size: 24.0,
             ),
             color: _page == 1

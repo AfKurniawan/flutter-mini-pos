@@ -31,6 +31,7 @@ dependencies:
   geolocator: ^3.0.1
   google_maps_flutter: ^0.5.25
   sticky_headers: ^0.1.8
+  #flutter_barcode_scanner: ^1.0.0 FORCE CLOSE NDA
   flutter_barcode_scanner: ^0.0.9
   #audioplayers: any
   vibration: ^1.2.4

@@ -66,7 +66,7 @@ class _ShopItemWidgetState extends State<ShopItemWidget> {
       ).ripple(() {
         //Navigator.pushNamed(context, "/shop_home", arguments: widget.shops.id);
        // Navigator.pushNamed(context, '/shop_detail', arguments: widget.shops);
-        Navigator.pushNamed(context, "/products", arguments: widget.shops);
+        Navigator.pushNamed(context, "/pos_scan_product", arguments: widget.shops);
       }, borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }

@@ -1,68 +1,65 @@
-class Products {
+class CartListModel {
   bool error;
   String messages;
-  Item item;
+  List<Cart> cart;
 
-  Products({this.error, this.messages, this.item});
+  CartListModel({this.error, this.messages, this.cart});
 
-  Products.fromJson(Map<String, dynamic> json) {
+  CartListModel.fromJson(Map<String, dynamic> json) {
     error = json['error'];
     messages = json['messages'];
-    item = json['item'] != null ? new Item.fromJson(json['item']) : null;
+    if (json['cart'] != null) {
+      cart = new List<Cart>();
+      json['cart'].forEach((v) {
+        cart.add(new Cart.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
     data['messages'] = this.messages;
-    if (this.item != null) {
-      data['item'] = this.item.toJson();
+    if (this.cart != null) {
+      data['cart'] = this.cart.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Item {
+class Cart {
   String id;
   String name;
-  String barcode;
   String image;
-  String variant;
-  String purchasePrice;
   String sellingPrice;
-  String shopId;
+  String quantity;
+  String total;
 
-  Item(
+  Cart(
       {this.id,
         this.name,
-        this.barcode,
         this.image,
-        this.variant,
-        this.purchasePrice,
         this.sellingPrice,
-        this.shopId});
+        this.quantity,
+        this.total});
 
-  Item.fromJson(Map<String, dynamic> json) {
+  Cart.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    barcode = json['barcode'];
     image = json['image'];
-    variant = json['variant'];
-    purchasePrice = json['purchase_price'];
     sellingPrice = json['selling_price'];
-    shopId = json['shop_id'];
+    quantity = json['quantity'];
+    total = json['total'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['barcode'] = this.barcode;
     data['image'] = this.image;
-    data['variant'] = this.variant;
-    data['purchase_price'] = this.purchasePrice;
     data['selling_price'] = this.sellingPrice;
-    data['shop_id'] = this.shopId;
+    data['quantity'] = this.quantity;
+    data['total'] = this.total;
     return data;
   }
 }

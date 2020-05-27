@@ -3,28 +3,31 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/src/products/models/products.dart';
+import 'package:flutter_deltaprima_pos/src/pos/services/add_cart_service.dart';
+import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
+import 'package:flutter_deltaprima_pos/src/products/models/products_model.dart';
 import 'package:flutter_deltaprima_pos/src/products/services/get_products_service.dart';
-import 'package:flutter_deltaprima_pos/src/products/widget/custom_dialog_success_add_cart.dart';
+import 'package:flutter_deltaprima_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 
-class ProductDetails extends StatefulWidget {
-  ProductDetails({Key key, this.model}) : super(key: key);
+class PosScanPage extends StatefulWidget {
+  PosScanPage({Key key, this.model}) : super(key: key);
   final Shops model;
 
   @override
-  _ProductDetailsState createState() => _ProductDetailsState();
+  _PosScanPageState createState() => _PosScanPageState();
 }
 
-class _ProductDetailsState extends State<ProductDetails> {
+class _PosScanPageState extends State<PosScanPage> {
   bool isFav = false;
   GetProductService getProductService;
+  AddCartService addCartService;
+  LabelCountService labelCountService;
   SharedPreferences prefs;
   bool isLogin;
   Shops model;
@@ -32,20 +35,28 @@ class _ProductDetailsState extends State<ProductDetails> {
   String name;
   String images;
   String price;
+  String productid;
   String takeBarcode = "";
   String barcode = "";
   String variant;
+  String shopid;
+  String labelcartcount;
   bool isNotFound;
   String userid;
   bool isNotScanned;
   bool errorBarcode;
+  TextEditingController quantityController = new TextEditingController();
+  TextEditingController receiveController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
     model = widget.model;
     getProductService = new GetProductService();
+    addCartService = new AddCartService();
+    labelCountService = new LabelCountService();
     getPrefs();
+    shopid = widget.model.id;
 
   }
 
@@ -56,7 +67,22 @@ class _ProductDetailsState extends State<ProductDetails> {
       prefs.setString('shopid', model.id);
       print("Nama Substring, $userid");
       userid = prefs.getString('userid');
+      getLabelCartCount();
       startBarcodeScanStream();
+    });
+  }
+
+  void getLabelCartCount() async {
+    labelCountService.getLabelCount(Api.GET_LABEL_COUNT, {
+      'user_id' : userid,
+      'shop_id' : shopid
+    }).then((response){
+      if(response.error == false){
+        setState(() {
+          labelcartcount = response.count.count;
+          print("Total Cart $labelcartcount");
+        });
+      }
     });
   }
 
@@ -68,6 +94,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       print("Barcode $barcode");
       Vibration.vibrate(duration: 100);
       getDetailProducts();
+      getLabelCartCount();
     });
   }
 
@@ -79,13 +106,14 @@ class _ProductDetailsState extends State<ProductDetails> {
           name = response.item.name;
           images = response.item.image;
           price = response.item.sellingPrice;
+          productid = response.item.id;
           variant = response.item.variant;
           errorBarcode = false;
+
         });
       } else if (response.error == true) {
         print("RESPONSE MESSAGES ${response.messages}");
         setState(() {
-          //isNotFound = true;
           errorBarcode = true;
 
         });
@@ -93,21 +121,31 @@ class _ProductDetailsState extends State<ProductDetails> {
     });
   }
 
-  void showSnackbar(){
-    Fluttertoast.showToast(
-        msg: "Product sudah dimasukkan ke Cart",
-        toastLength: Toast.LENGTH_LONG,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
 
-    startBarcodeScanStream();
+  void addToCart() async {
+    addCartService.insertCart(Api.INSERT_CART_URL, {
+      'product_id': productid,
+      'quantity': quantityController.text,
+      'shop_id': model.id,
+      'user_id': model.userId,
+      'price': price,
+      'status': 'onCart'
+    }).then((response){
+      if(response.error == false){
+        setState(() {
+            print("Sukses insert to Cart");
+            dialogSuccess(context);
+        });
+      }
+    });
   }
+
 
   void handleSubmitted(String value) {
    setState(() {
-     dialogSuccess(context);
+     //dialogSuccess(context);
+     addToCart();
+     getLabelCartCount();
      print("TEXT FORM FIELD HANDLE");
    });
   }
@@ -128,10 +166,15 @@ class _ProductDetailsState extends State<ProductDetails> {
       context: context,
       builder: (BuildContext context) => CustomDialogSuccessAddCart(
         title: "Berhasil",
-        description: "Produk sudah berhasil masuk di cart",
-        buttonPositiveText: AppLocalizations.of(context)
-            .translate("button_register_dialog_success"),
-        buttonNegativeText: AppLocalizations.of(context).translate("button_negative_success"),
+        description: "Produk sudah berhasil masuk di cart... Scan lagi ??",
+        buttonPositiveText: "Scan Lagi",
+        buttonNegativeText: "Lihat Cart",
+        btnPositiveCallBack: (){
+          startBarcodeScanStream();
+        },
+        btnNegativeCallback: (){
+          Navigator.pushReplacementNamed(context, '/cart_page');
+        }
       ),
     );
   }
@@ -157,6 +200,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             icon: IconBadge(
               icon: Icons.shopping_cart,
               size: 26.0,
+              count: labelcartcount,
             ),
             color: LightColor.grey,
             onPressed: () {
@@ -337,6 +381,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             SizedBox(height: 10),
 
             TextFormField(
+              controller: quantityController,
               onFieldSubmitted: handleSubmitted,
               autofocus: true,
               keyboardType: TextInputType.number,
@@ -366,6 +411,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       .translate("hint_quantity"),
                   hintStyle: TextStyle(color: Colors.grey[400])),
             ),
+
             SizedBox(height: 20.0),
           ],
         ),

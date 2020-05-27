@@ -46,7 +46,7 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Future<List<Shops>> getShopList() async {
     var res = await http.post(Uri.encodeFull(Api.GET_SHOP_LIST),
-        headers: {"Accept": "application/json"}, body: {'userid': '1'});
+        headers: {"Accept": "application/json"}, body: {'userid': userid});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       var rest = data["shops"] as List;
@@ -64,16 +64,6 @@ class _ShopListPageState extends State<ShopListPage> {
      // appBar: appBar(),
       backgroundColor: Theme.of(context).backgroundColor,
       body: singleChildScrollView(),
-      //body: customScrollView(),
-//      floatingActionButton: CustomFloat(
-//      icon: Icons.add,
-//      qrCallback: (){
-//        print("Button Clicked Cuk");
-//        Navigator.pushReplacementNamed(context, '/create_shop');
-//      },
-//    ),
-   // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      //bottomNavigationBar: myBottomBar(),
     );
   }
 
