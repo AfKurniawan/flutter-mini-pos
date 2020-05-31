@@ -47,7 +47,8 @@
   "hint_register_shop_phone": "Telp/HP. Toko",
 
   "appbar_create_shop": "Buat Toko Baru",
-  "hint_quantity" : "Quantity"
+  "hint_quantity" : "Quantity",
+  "scan_button": "Scan Barcode"
 
 
 

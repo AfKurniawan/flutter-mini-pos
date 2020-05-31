@@ -1,18 +1,49 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
+import 'package:flutter_deltaprima_pos/src/cart/pages/cart_list_page.dart';
+import 'package:flutter_deltaprima_pos/src/cart/services/delete_cart_service.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:http/http.dart';
 
 class CartItem extends StatefulWidget {
 
+  CartListPage cartListPage;
   Cart cart;
-  CartItem({Key key, this.cart}) : super(key: key);
+  CartItem({Key key, this.cart, this.cartListPage}) : super(key: key);
 
   @override
   _CartItemState createState() => _CartItemState();
 }
 
 class _CartItemState extends State<CartItem> {
+
+  CartListPage cartListPage;
+  DeleteCartService deleteCartService;
+
+  @override
+  void initState() {
+
+    super.initState();
+    cartListPage = widget.cartListPage;
+    deleteCartService = new DeleteCartService();
+  }
+
+  updateCartState(String id) {
+    deleteCartService.delete(
+        Api.DELETE_CART, {'cart_id': id, 'status': 'onDeleted'}).then((response){
+      if(response.error == false){
+        setState(() {
+          print("DELETETETETETETETETETET");
+          Navigator.pushReplacementNamed(context, '/cart_page');
+        });
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,6 +53,7 @@ class _CartItemState extends State<CartItem> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
 
+          widget.cart.image == "" ? noImage() :
           imageWidget(),
           SizedBox(width: 15),
           newTextWidget(),
@@ -31,11 +63,25 @@ class _CartItemState extends State<CartItem> {
     );
   }
 
+  Widget noImage(){
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(13)),
+      child: Container(
+        height: 55,
+        width: 55,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: randomColor(),
+        ),
+      ),
+    );
+  }
+
   Widget imageWidget(){
     return Container(
       child: Container(
-        height: 90,
-        width: 90,
+        height: 70,
+        width: 70,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
               Radius.circular(5)),
@@ -59,6 +105,7 @@ class _CartItemState extends State<CartItem> {
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
                   children: <Widget>[
+                    Divider(),
                     Text(
                       widget.cart.name,
                       overflow:
@@ -68,7 +115,8 @@ class _CartItemState extends State<CartItem> {
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                           color: Colors.blueGrey)),
-                    SizedBox(height: 10.0),
+
+                    SizedBox(height: 3.0),
                     Text(
                       "Rp. ${widget.cart.sellingPrice}",
                       style: TextStyle(
@@ -77,7 +125,7 @@ class _CartItemState extends State<CartItem> {
                         color: LightColor.skyBlue,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 3),
                     Text(
                       "Qty: ${widget.cart.quantity}",
                       style: TextStyle(
@@ -86,7 +134,7 @@ class _CartItemState extends State<CartItem> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 3),
                     Row(
                       children: <Widget>[
                         Text(
@@ -108,6 +156,8 @@ class _CartItemState extends State<CartItem> {
                         ),
                       ],
                     ),
+
+                    Divider(),
                   ],
                 ),
               ),
@@ -118,7 +168,9 @@ class _CartItemState extends State<CartItem> {
                 children: <Widget>[
                   IconButton(
                     onPressed: () {
-
+                      setState(() {
+                        updateCartState(widget.cart.cartId);
+                      });
                     },
                     iconSize: 30,
                     padding: EdgeInsets.symmetric(
@@ -136,77 +188,22 @@ class _CartItemState extends State<CartItem> {
 
   }
 
-  Widget textWidgetRakanggo(){
-    return  Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(
-              right: MediaQuery.of(context).size.width / 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                widget.cart.name,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.blueGrey),
-              ),
-              SizedBox(height: 10.0),
-              Text(
-                "Rp. ${widget.cart.sellingPrice}",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w900,
-                  color: LightColor.skyBlue,
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Text(
-                "Qty: ${widget.cart.quantity}",
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: LightColor.purpleLight,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "SubTotal",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w500,
-                      color: LightColor.lightOrange,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Container(
-          color: Colors.blueGrey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              IconButton(
-                iconSize: 30,
-                padding: EdgeInsets.symmetric(horizontal: 9),
-                icon: Icon(Icons.delete_outline),
-                color: Theme.of(context).hintColor,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+  Color randomColor() {
+    var random = Random();
+    final colorList = [
+      Theme.of(context).primaryColor,
+      LightColor.orange,
+      LightColor.green,
+      LightColor.grey,
+      LightColor.lightOrange,
+      LightColor.skyBlue,
+      LightColor.titleTextColor,
+      Colors.red,
+      Colors.brown,
+      LightColor.purpleExtraLight,
+      LightColor.skyBlue,
+    ];
+    var color = colorList[random.nextInt(colorList.length)];
+    return color;
   }
 }

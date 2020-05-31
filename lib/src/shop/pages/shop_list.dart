@@ -46,7 +46,7 @@ class _ShopListPageState extends State<ShopListPage> {
 
   Future<List<Shops>> getShopList() async {
     var res = await http.post(Uri.encodeFull(Api.GET_SHOP_LIST),
-        headers: {"Accept": "application/json"}, body: {'userid': userid});
+        headers: {"Accept": "application/json"}, body: {'userid': '11'});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       var rest = data["shops"] as List;

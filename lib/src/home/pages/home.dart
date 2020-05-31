@@ -14,20 +14,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    //getLoginState();
   }
-
-
-
-//  clearPrefs() async {
-//    prefs = await SharedPreferences.getInstance();
-//    print("Home Page Prefs Status ${prefs.getBool('isLogin')}");
-//    prefs.setBool('isLogin', false);
-//    Navigator.of(context).pushAndRemoveUntil(
-//        MaterialPageRoute(builder: (context) => LoginPage()),
-//            (Route<dynamic> route) => false);
-//    //prefs.clear();
-//  }
 
 
   Future<Null> clearPrefs() async {

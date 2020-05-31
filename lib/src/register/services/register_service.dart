@@ -2,7 +2,7 @@ import 'package:flutter_deltaprima_pos/src/register/models/register_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class RegisterApiService {
+class RegisterService {
 
   Future<RegisterModel> register(String url, var body) async {
     return await http.post(Uri.encodeFull(url),

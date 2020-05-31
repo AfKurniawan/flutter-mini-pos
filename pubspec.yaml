@@ -37,7 +37,10 @@ dependencies:
   vibration: ^1.2.4
   fluttertoast: ^4.0.0
   font_awesome_flutter: ^8.5.0
-
+  #scroll_bottom_navigation_bar: ^3.0.0
+  flashy_tab_bar: ^0.0.3
+  #flutter_icons: ^1.1.0
+  fluttericon: ^1.0.7
 
 dev_dependencies:
   flutter_test:

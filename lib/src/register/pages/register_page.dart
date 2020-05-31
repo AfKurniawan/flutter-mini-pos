@@ -5,7 +5,7 @@ import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/dialogs/CustomDialogError.dart';
 import 'package:flutter_deltaprima_pos/dialogs/CustomDialogSuccess.dart';
 import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/src/register/services/register_api_service.dart';
+import 'package:flutter_deltaprima_pos/src/register/services/register_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +18,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  RegisterApiService registerApiService;
+  RegisterService registerApiService;
   TextEditingController controllerFullName = new TextEditingController();
   TextEditingController controllerEmail = new TextEditingController();
   TextEditingController controllerPhone = new TextEditingController();
@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    registerApiService = new RegisterApiService();
+    registerApiService = new RegisterService();
     isLoading = false;
   }
 

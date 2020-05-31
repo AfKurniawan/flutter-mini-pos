@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_deltaprima_pos/animation/FadeAnimation.dart';
 import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/localization/localization.dart';
@@ -56,7 +57,6 @@ class _PosScanPageState extends State<PosScanPage> {
     addCartService = new AddCartService();
     labelCountService = new LabelCountService();
     getPrefs();
-    shopid = widget.model.id;
 
   }
 
@@ -64,11 +64,11 @@ class _PosScanPageState extends State<PosScanPage> {
   getPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString('shopid', model.id);
       print("Nama Substring, $userid");
       userid = prefs.getString('userid');
+      shopid = prefs.getString('shopid');
       getLabelCartCount();
-      startBarcodeScanStream();
+      //startBarcodeScanStream();
     });
   }
 
@@ -100,7 +100,7 @@ class _PosScanPageState extends State<PosScanPage> {
 
   void getDetailProducts() async {
     getProductService.getProduct(Api.GET_PRODUCTS_DETAIL,
-        {'shop_id': model.id, 'barcode': barcode}).then((response) {
+        {'shop_id': shopid, 'barcode': barcode}).then((response) {
       if (response.error == false) {
         setState(() {
           name = response.item.name;
@@ -126,8 +126,8 @@ class _PosScanPageState extends State<PosScanPage> {
     addCartService.insertCart(Api.INSERT_CART_URL, {
       'product_id': productid,
       'quantity': quantityController.text,
-      'shop_id': model.id,
-      'user_id': model.userId,
+      'shop_id': shopid,
+      'user_id': userid,
       'price': price,
       'status': 'onCart'
     }).then((response){
@@ -182,49 +182,63 @@ class _PosScanPageState extends State<PosScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).backgroundColor,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: LightColor.grey,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: barcode == "" ? barcodeKosong() : appBarTitle(),
-        elevation: 0.5,
-        actions: <Widget>[
-          IconButton(
-            icon: IconBadge(
-              icon: Icons.shopping_cart,
-              size: 26.0,
-              count: labelcartcount,
-            ),
-            color: LightColor.grey,
-            onPressed: () {
-              Navigator.pushNamed(context, "/cart_page");
-            },
-          ),
-        ],
-      ),
+      //appBar: myAppbar(),
       body: barcode == "" ? barcodeKosong()
        : body(),
-      bottomNavigationBar: Container(
-        height: 50.0,
-        child: RaisedButton(
-          child: Text(
-            "Scan Again",
-            style: TextStyle(
-              color: Colors.white,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(left:18.0, right: 18, bottom: 10),
+        child: scanButtonNew(),
+      ),
+    );
+  }
+
+  Widget scanButtonNew(){
+
+      return  FadeAnimation(
+          2,
+          InkWell(
+            onTap: (){
+              startBarcodeScanStream();
+            },
+            splashColor: Color.fromRGBO(143, 148, 251, 1),
+            child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(colors: [
+                    Color.fromRGBO(143, 148, 251, 1),
+                    Color.fromRGBO(143, 148, 251, .6),
+                  ])),
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context).translate('scan_button'),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
+          )
+      );
+
+  }
+
+  Widget scanButton(){
+    return Container(
+      height: 50.0,
+      width: 200,
+      child: RaisedButton(
+        child: Text(
+          "Scan Barcode",
+          style: TextStyle(
+            color: Colors.white,
           ),
-          color: Theme.of(context).accentColor,
-          onPressed: () {
-            startBarcodeScanStream();
-          },
         ),
+        color: Theme.of(context).accentColor,
+        onPressed: () {
+          startBarcodeScanStream();
+        },
       ),
     );
   }
@@ -239,6 +253,36 @@ class _PosScanPageState extends State<PosScanPage> {
     } else {
       return Text("$name", style: TextStyle(color: Colors.black),);
     }
+  }
+
+  Widget myAppbar(){
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Theme.of(context).backgroundColor,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: LightColor.grey,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      centerTitle: true,
+      title: barcode == "" ? barcodeKosong() : appBarTitle(),
+      elevation: 0.5,
+      actions: <Widget>[
+        IconButton(
+          icon: IconBadge(
+            icon: Icons.shopping_cart,
+            size: 26.0,
+            count: labelcartcount,
+          ),
+          color: LightColor.grey,
+          onPressed: () {
+            Navigator.pushNamed(context, "/cart_page");
+          },
+        ),
+      ],
+    );
   }
 
 
