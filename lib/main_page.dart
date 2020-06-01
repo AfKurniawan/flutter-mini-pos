@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flashy_tab_bar/flashy_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_deltaprima_pos/animation/FadeAnimation.dart';
 import 'package:flutter_deltaprima_pos/common_widget/drawer_widget.dart';
 import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
 import 'package:flutter_deltaprima_pos/src/cart/pages/cart_list_page.dart';
-import 'package:flutter_deltaprima_pos/src/home/pages/home.dart';
+import 'package:flutter_deltaprima_pos/src/home/pages/home_page.dart';
 import 'package:flutter_deltaprima_pos/src/pos/pages/pos_scan_page.dart';
 import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
 import 'package:flutter_deltaprima_pos/src/register/pages/register_page.dart';
@@ -48,12 +50,16 @@ class _MainPageState extends State<MainPage> {
   String shopid;
   String usertype;
   String labelcartcount = "";
+  bool stoptimer;
+  Timer timer;
 
   @override
   void initState() {
+    startTimer();
     getPrefs();
     labelCountService = new LabelCountService();
     selectTab(widget.currentTab);
+    stoptimer = false;
     super.initState();
   }
 
@@ -68,6 +74,19 @@ class _MainPageState extends State<MainPage> {
 
   }
 
+  startTimer() {
+   timer = Timer.periodic(Duration(seconds: 1), (_) {
+
+     if(mounted){
+       print("TIMER START RUNNING");
+       getLabelCartCount();
+     } else {
+       return;
+     }
+
+    });
+  }
+
   getLabelCartCount() async {
     print("Get Label Cart count Start");
     labelCountService.getLabelCount(Api.GET_LABEL_COUNT, {
@@ -78,6 +97,8 @@ class _MainPageState extends State<MainPage> {
         setState(() {
           labelcartcount = response.count.count;
           print("Total Cart MAIN PAGE $labelcartcount");
+          timer?.cancel();
+          timer = null;
         });
       }
     });
@@ -95,17 +116,22 @@ class _MainPageState extends State<MainPage> {
         case 0 :
           widget.currentTitle = "POS";
           widget.currenPage = PosScanPage();
-          //Navigator.pushNamed(context, "/cart_page");
+          getLabelCartCount();
+          //startTimer();
           break;
 
         case 1 :
           widget.currentTitle = "Beranda";
           widget.currenPage = Homepage();
+          getLabelCartCount();
+          //startTimer();
           break;
 
         case 2 :
           widget.currentTitle = "Account";
           widget.currenPage = Homepage();
+         getLabelCartCount();
+          //startTimer();
 
       }
 
@@ -140,41 +166,42 @@ class _MainPageState extends State<MainPage> {
         onPressed: () => _scaffoldKey.currentState.openDrawer(),
       ),
       actions: <Widget>[
-
-        IconButton(
-          icon: IconBadge(
-            icon: LineariconsFree.cart,
-            size: 26.0,
-            count: labelcartcount,
-          ),
-          color: LightColor.grey,
-          onPressed: () {
-            Navigator.pushNamed(context, "/cart_page");
-          },
-        ),
-//        IconButton(
-//          icon: Icon(LineariconsFree.cart, size: 23),
-//          color: LightColor.grey,
-//          onPressed: () => Navigator.pushNamed(context, "/cart_page"),
-//        ),
-        SizedBox(width: 10),
-        Icon(
-          LineariconsFree.alarm,
-          size: 23,
-          color: LightColor.grey,
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(13)
-          ),
-          child: Container(
-            // height: 40,
-            // width: 40,
-            decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+        FadeAnimation(1,
+          IconButton(
+            icon: IconBadge(
+              icon: LineariconsFree.cart,
+              size: 24.0,
+              count: labelcartcount,
             ),
-            child: Image.asset("assets/images/user.png", fit: BoxFit.fill),
+            color: LightColor.grey,
+            onPressed: () {
+              Navigator.pushNamed(context, "/cart_page");
+            },
           ),
-        ).p(8),
+        ),
+//        SizedBox(width: 2),
+//        FadeAnimation(2,
+//          Icon(
+//            LineariconsFree.history,
+//            size: 20,
+//            color: LightColor.grey,
+//          ),
+//        ),
+
+        FadeAnimation(2,
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(13)
+            ),
+            child: Container(
+              // height: 40,
+              // width: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+              ),
+              child: Image.asset("assets/images/user.png", fit: BoxFit.fill),
+            ),
+          ).p(8),
+        ),
       ],
     );
   }

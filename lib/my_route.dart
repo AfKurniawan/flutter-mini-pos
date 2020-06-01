@@ -3,7 +3,7 @@ import 'package:flutter_deltaprima_pos/custom_route.dart';
 import 'package:flutter_deltaprima_pos/main_page.dart';
 import 'package:flutter_deltaprima_pos/splash_page.dart';
 import 'package:flutter_deltaprima_pos/src/cart/pages/cart_list_page.dart';
-import 'package:flutter_deltaprima_pos/src/home/pages/home.dart';
+import 'package:flutter_deltaprima_pos/src/home/pages/home_page.dart';
 import 'package:flutter_deltaprima_pos/src/login/pages/login_page.dart';
 import 'package:flutter_deltaprima_pos/src/pos/pages/pos_scan_page.dart';
 import 'package:flutter_deltaprima_pos/src/products/pages/scan_products_page.dart';
@@ -16,7 +16,7 @@ class Routes {
       '/': (_) => LoginPage(),
       '/home': (_) => Homepage(),
       '/cart_page'  : (_) => CartListPage(),
-      '/main_page'  : (_) => MainPage(),
+     // '/main_page'  : (_) => MainPage(),
    //   '/login_page' : (_) => LoginPage(),
       '/shop_list_page' : (_) => ShopListPage()
     };
@@ -42,6 +42,12 @@ class Routes {
         return CustomRoute<bool>(
           builder: (BuildContext context) => PosScanPage(model: settings.arguments)
         );
+
+      case 'main_page':
+        return MaterialPageRoute(
+            builder: (_) => MainPage(
+              currentTab: settings.arguments,
+            ));
 
     }
   }

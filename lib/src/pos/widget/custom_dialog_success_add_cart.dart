@@ -83,15 +83,18 @@ class CustomDialogSuccessAddCart extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  FlatButton(
-                    onPressed: btnNegativeCallback,
-                    child: Text(buttonNegativeText),
-                  ),
 
                   FlatButton(
                     onPressed: btnPositiveCallBack,
-                    child: Text(buttonPositiveText),
+                    child: Text(buttonPositiveText, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                   ),
+
+                  FlatButton(
+                    onPressed: btnNegativeCallback,
+                    child: Text(buttonNegativeText, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                  ),
+
+
                 ],
               ),
             ],

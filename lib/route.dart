@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deltaprima_pos/configs/route_arguments.dart';
 import 'package:flutter_deltaprima_pos/custom_route.dart';
-import 'package:flutter_deltaprima_pos/src/home/pages/home.dart';
+import 'package:flutter_deltaprima_pos/src/home/pages/home_page.dart';
 import 'package:flutter_deltaprima_pos/src/login/pages/login_page.dart';
 import 'package:flutter_deltaprima_pos/src/register/pages/register_page.dart';
 import 'package:flutter_deltaprima_pos/src/shop/pages/create_shop.dart';

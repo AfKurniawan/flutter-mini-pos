@@ -1,13 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_deltaprima_pos/animation/FadeAnimation.dart';
+import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
 import 'package:flutter_deltaprima_pos/constants/apis.dart';
+import 'package:flutter_deltaprima_pos/localization/localization.dart';
+import 'package:flutter_deltaprima_pos/main_page.dart';
 import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
 import 'package:flutter_deltaprima_pos/src/cart/services/delete_cart_service.dart';
 import 'package:flutter_deltaprima_pos/src/cart/services/total_cart_service.dart';
 import 'package:flutter_deltaprima_pos/src/cart/widget/cart_item.dart';
+import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_deltaprima_pos/style/extention.dart';
@@ -34,12 +41,16 @@ class _CartListPageState extends State<CartListPage> {
   String totalcart = "";
   TotalCartService totalCartService;
   DeleteCartService deleteCartService;
+  LabelCountService labelCountService;
+  String labelcartcount;
+
 
   @override
   void initState() {
     super.initState();
     totalCartService = new TotalCartService();
     deleteCartService = new DeleteCartService();
+    labelCountService = new LabelCountService();
     getPrefs();
     //getTotalCart();
   }
@@ -52,8 +63,23 @@ class _CartListPageState extends State<CartListPage> {
       fullname = prefs.getString("fullname");
       print("UserID di halaman CartListPage $userid");
       print("ShopID di halaman CartListPage $shopid");
-      //getCartList();
+      getLabelCartCount();
       getTotalCart();
+    });
+  }
+
+  getLabelCartCount() async {
+    print("Get Label Cart count Start");
+    labelCountService.getLabelCount(Api.GET_LABEL_COUNT, {
+      'user_id' : userid,
+      'shop_id' : shopid
+    }).then((response){
+      if(response.error == false){
+        setState(() {
+          labelcartcount = response.count.count;
+          print("Total Cart MAIN PAGE $labelcartcount");
+        });
+      }
     });
   }
 
@@ -72,7 +98,7 @@ class _CartListPageState extends State<CartListPage> {
 
   void getTotalCart() async {
     totalCartService.getTotalCart(
-        Api.GET_TOTAL_CART, {'user_id': '11', 'shop_id': '1'}).then((response) {
+        Api.GET_TOTAL_CART, {'user_id': userid, 'shop_id': shopid}).then((response) {
       if (response.error == false) {
         setState(() {
           totalcart = response.totals.total;
@@ -87,7 +113,7 @@ class _CartListPageState extends State<CartListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: myAppBar(),
       body: Padding(
         padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 140),
         child: ListView(
@@ -153,43 +179,11 @@ class _CartListPageState extends State<CartListPage> {
                 padding: EdgeInsets.all(10),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
                     borderRadius: BorderRadius.all(
                       Radius.circular(5.0),
                     ),
                   ),
-                  child: TextField(
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                          color: Colors.grey[100],
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey[100],
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      hintText: "Receive Amount",
-                      prefixIcon: Icon(
-                        FontAwesomeIcons.moneyCheck,
-                        color: LightColor.grey,
-                      ),
-                      hintStyle: TextStyle(
-                        fontSize: 15.0,
-                        color: LightColor.grey,
-                      ),
-                    ),
-                    maxLines: 1,
-                    controller: _couponlControl,
-                  ),
+                  child: newReceiveAmountWidget(),
                 ),
               ),
               Row(
@@ -259,40 +253,133 @@ class _CartListPageState extends State<CartListPage> {
     );
   }
 
-  Widget appBar() {
-    return AppBar(
+
+  Widget myAppBar(){
+    return new AppBar(
       centerTitle: true,
-      title: Text(
-        "Checkout",
+      title: Text("Checkout",
         style: TextStyle(color: Colors.black),
       ),
-      elevation: .5,
+      elevation: 1,
       backgroundColor: Theme.of(context).backgroundColor,
       leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
+        icon: Icon(Icons.arrow_back_ios,
           color: LightColor.grey,
         ),
-        onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator
+                .pushReplacement(
+              context,
+              new MaterialPageRoute(builder: (context) => new MainPage(currentTab: 0)),
+            ).then((value) {
+              setState(() {
+                labelcartcount = labelcartcount;
+              });
+            });
+          }
       ),
       actions: <Widget>[
-        Icon(
-          Icons.notifications_none,
-          size: 30,
+        FadeAnimation(1,
+          IconButton(
+            icon: IconBadge(
+              icon: LineariconsFree.cart,
+              size: 24.0,
+              count: labelcartcount,
+            ),
+            color: LightColor.grey,
+          ),
+        ),
+
+//        SizedBox(width: 3),
+//        FadeAnimation(2,
+//          Icon(
+//            LineariconsFree.alarm,
+//            size: 23,
+//            color: LightColor.grey,
+//          ),
+//        ),
+        FadeAnimation(3,
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(13)
+            ),
+            child: Container(
+              // height: 40,
+              // width: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+              ),
+              child: Image.asset("assets/images/user.png", fit: BoxFit.fill),
+            ),
+          ).p(8),
+        ),
+      ],
+    );
+  }
+
+  Widget receiveAmountWidget(){
+    return TextField(
+      style: TextStyle(
+        fontSize: 15.0,
+        color: Colors.black,
+      ),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.grey[100],
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey[100],
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        hintText: "Receive Amount",
+        prefixIcon: Icon(
+          FontAwesomeIcons.moneyCheck,
           color: LightColor.grey,
         ),
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(13)),
-          child: Container(
-            // height: 40,
-            // width: 40,
-            decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
-            ),
-            child: Image.asset("assets/images/user.png", fit: BoxFit.fill),
+        hintStyle: TextStyle(
+          fontSize: 15.0,
+          color: LightColor.grey,
+        ),
+      ),
+      maxLines: 1,
+      controller: _couponlControl,
+    );
+
+  }
+
+  Widget newReceiveAmountWidget(){
+    return TextFormField(
+      validator: RequiredValidator(
+          errorText:
+          AppLocalizations.of(context).translate("error_form_entry")),
+      autofocus: true,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[600], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-        ).p(8),
-      ],
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[400], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          hintText: AppLocalizations.of(context)
+              .translate("hint_quantity"),
+          hintStyle: TextStyle(color: Colors.grey[400])),
     );
   }
 

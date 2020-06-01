@@ -24,7 +24,7 @@ class _IconBadgeState extends State<IconBadge> {
           size: widget.size,
         ),
 
-        widget.count == "" ? labelNull()
+        widget.count == null ? labelNull()
          : labelNotNull()
 
       ],

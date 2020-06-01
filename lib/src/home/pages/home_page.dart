@@ -34,23 +34,25 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("HOME"),
-            SizedBox(height: 30),
-            GestureDetector(
-              onTap: (){
-                clearPrefs();
-              },
-              child: Text("Logout",
-              style: TextStyle(
-                fontSize: 48,
-                color: Colors.grey
-              ),
-              ),
-            )
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("HOME"),
+              SizedBox(height: 30),
+              GestureDetector(
+                onTap: (){
+                  clearPrefs();
+                },
+                child: Text("Logout",
+                style: TextStyle(
+                  fontSize: 48,
+                  color: Colors.grey
+                ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

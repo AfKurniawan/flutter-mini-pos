@@ -11,9 +11,12 @@ import 'package:flutter_deltaprima_pos/src/products/services/get_products_servic
 import 'package:flutter_deltaprima_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:flutter_deltaprima_pos/style/text_styles.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_deltaprima_pos/style/extention.dart';
 
 
 class PosScanPage extends StatefulWidget {
@@ -42,16 +45,20 @@ class _PosScanPageState extends State<PosScanPage> {
   String variant;
   String shopid;
   String labelcartcount;
+  String fullname;
   bool isNotFound;
   String userid;
   bool isNotScanned;
   bool errorBarcode;
+  bool isBtnScan;
   TextEditingController quantityController = new TextEditingController();
   TextEditingController receiveController = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    isBtnScan = true;
     model = widget.model;
     getProductService = new GetProductService();
     addCartService = new AddCartService();
@@ -67,7 +74,9 @@ class _PosScanPageState extends State<PosScanPage> {
       print("Nama Substring, $userid");
       userid = prefs.getString('userid');
       shopid = prefs.getString('shopid');
+      fullname = prefs.getString('fullname');
       getLabelCartCount();
+
       //startBarcodeScanStream();
     });
   }
@@ -94,7 +103,7 @@ class _PosScanPageState extends State<PosScanPage> {
       print("Barcode $barcode");
       Vibration.vibrate(duration: 100);
       getDetailProducts();
-      getLabelCartCount();
+      labelcartcount = labelcartcount;
     });
   }
 
@@ -109,13 +118,13 @@ class _PosScanPageState extends State<PosScanPage> {
           productid = response.item.id;
           variant = response.item.variant;
           errorBarcode = false;
+          isBtnScan = false;
 
         });
       } else if (response.error == true) {
         print("RESPONSE MESSAGES ${response.messages}");
         setState(() {
           errorBarcode = true;
-
         });
       }
     });
@@ -133,6 +142,7 @@ class _PosScanPageState extends State<PosScanPage> {
     }).then((response){
       if(response.error == false){
         setState(() {
+            labelcartcount = labelcartcount;
             print("Sukses insert to Cart");
             dialogSuccess(context);
         });
@@ -141,35 +151,17 @@ class _PosScanPageState extends State<PosScanPage> {
   }
 
 
-  void handleSubmitted(String value) {
-   setState(() {
-     //dialogSuccess(context);
-     addToCart();
-     getLabelCartCount();
-     print("TEXT FORM FIELD HANDLE");
-   });
-  }
-
-  void showToast(BuildContext context) {
-    final scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: const Text('Added to cart'),
-        action: SnackBarAction(
-            label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
-      ),
-    );
-  }
-
   dialogSuccess(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) => CustomDialogSuccessAddCart(
         title: "Berhasil",
         description: "Produk sudah berhasil masuk di cart... Scan lagi ??",
         buttonPositiveText: "Scan Lagi",
         buttonNegativeText: "Lihat Cart",
         btnPositiveCallBack: (){
+          Navigator.of(context).pop();
           startBarcodeScanStream();
         },
         btnNegativeCallback: (){
@@ -182,27 +174,92 @@ class _PosScanPageState extends State<PosScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: myAppbar(),
-      body: barcode == "" ? barcodeKosong()
-       : body(),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left:18.0, right: 18, bottom: 10),
+      body: barcode == "" ? FadeAnimation(1,
+          singleChildScrollView()
+      )
+       : detailProductWidget(),
+      bottomNavigationBar:
+          isBtnScan == true ?
+      Padding(
+        padding: const EdgeInsets.only(left:30, right: 30, bottom: 8),
         child: scanButtonNew(),
+      )
+              : Padding(
+            padding: const EdgeInsets.only(left:30, right: 30, bottom: 8),
+            child: showCartButton(),
+          )
+    );
+  }
+
+  Widget header() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("Hello,", style: TextStyles.title.subTitleColor),
+        Text("$fullname", style: TextStyles.h1Style),
+      ],
+    ).p16;
+  }
+
+  Widget searchField() {
+    return Container(
+      height: 55,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: LightColor.grey.withOpacity(.5),
+            blurRadius: 15,
+            offset: Offset(5, 5),
+          )
+        ],
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          border: InputBorder.none,
+          hintText: "Search atau Scan Barcode",
+          hintStyle: TextStyles.body.subTitleColor,
+          suffixIcon: SizedBox(
+              width: 50,
+              child: Icon(
+                  FontAwesome5.barcode, color: LightColor.purple)
+                  .alignCenter
+                  .ripple(() {
+                    startBarcodeScanStream();
+              }, borderRadius: BorderRadius.circular(13))),
+        ),
+      ),
+    );
+  }
+
+  Widget singleChildScrollView(){
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            header(),
+            searchField(),
+            //category(),
+            barcodeKosong()
+          ],
+        ),
       ),
     );
   }
 
   Widget scanButtonNew(){
-
-      return  FadeAnimation(
-          2,
-          InkWell(
+      return InkWell(
             onTap: (){
               startBarcodeScanStream();
             },
             splashColor: Color.fromRGBO(143, 148, 251, 1),
             child: Container(
-              height: 60,
+              height: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   gradient: LinearGradient(colors: [
@@ -219,9 +276,40 @@ class _PosScanPageState extends State<PosScanPage> {
                 ),
               ),
             ),
-          )
-      );
+          );
+  }
 
+  Widget showCartButton(){
+    return InkWell(
+      onTap: (){
+        print("Button Register clicked");
+        if (_formKey.currentState.validate()) {
+          print("Validator Valid");
+          setState(() {
+            addToCart();
+          });
+        }
+      },
+      splashColor: Color.fromRGBO(143, 148, 251, 1),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(143, 148, 251, 1),
+              Color.fromRGBO(143, 148, 251, .6),
+            ])),
+        child: Center(
+          child: Text(
+            "Add to Cart",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget scanButton(){
@@ -285,24 +373,43 @@ class _PosScanPageState extends State<PosScanPage> {
     );
   }
 
-
   Widget barcodeKosong(){
     return Container(
+      height: MediaQuery.of(context).size.height /2,
       child: Center(
         child: Text("Silahkan Scan Barcode"),
       ),
     );
   }
 
+  Widget barcodeBelumTerdaftar(){
+    return Container(
+      height: MediaQuery.of(context).size.height /2,
+      child: Center(
+        child: Text("Barcode belum terdaftar"),
+      ),
+    );
+  }
 
-
-  Widget body() {
-    if (errorBarcode == true) {
-      return Container(
-        child: Center(
-          child: Text("Barcode belum terdaftar"),
+  Widget barcodeUnregistered(){
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            header(),
+            searchField(),
+            //category(),
+            barcodeBelumTerdaftar()
+          ],
         ),
-      );
+      ),
+    );
+  }
+
+  Widget detailProductWidget() {
+    if (errorBarcode == true) {
+      return barcodeUnregistered();
     } else {
       return Padding(
         padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
@@ -320,7 +427,7 @@ class _PosScanPageState extends State<PosScanPage> {
                       .of(context)
                       .size
                       .width,
-                  child: images == ""
+                  child: images == null
                       ? Container(
                       height: MediaQuery
                           .of(context)
@@ -374,6 +481,15 @@ class _PosScanPageState extends State<PosScanPage> {
             SizedBox(height: 10.0),
             Row(
               children: <Widget>[
+                name == null ?
+                Text(
+                  "",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  maxLines: 2,
+                ) :
                 Text(
                   "$name",
                   style: TextStyle(
@@ -383,6 +499,16 @@ class _PosScanPageState extends State<PosScanPage> {
                   maxLines: 2,
                 ),
                 SizedBox(width: 5),
+                variant == null ?
+                Text(
+                  "",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 2,
+                ) :
                 Text(
                   "$variant",
                   style: TextStyle(
@@ -399,6 +525,17 @@ class _PosScanPageState extends State<PosScanPage> {
               padding: EdgeInsets.only(bottom: 5.0, top: 2.0),
               child: Row(
                 children: <Widget>[
+                  price == null ?
+                  Text(
+                    "",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w900,
+                      color: Theme
+                          .of(context)
+                          .accentColor,
+                    ),
+                  ) :
                   Text(
                     "Rp. $price",
                     style: TextStyle(
@@ -424,36 +561,9 @@ class _PosScanPageState extends State<PosScanPage> {
 
             SizedBox(height: 10),
 
-            TextFormField(
-              controller: quantityController,
-              onFieldSubmitted: handleSubmitted,
-              autofocus: true,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.done,
-              validator: RequiredValidator(
-                  errorText:
-                  AppLocalizations.of(context).translate("error_form_entry")),
-              //controller: controllerShopAddress,
-              decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[600], width: 1.5),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[400], width: 1.5),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red[300], width: 1.5),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red[300], width: 1.5),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  hintText: AppLocalizations.of(context)
-                      .translate("hint_quantity"),
-                  hintStyle: TextStyle(color: Colors.grey[400])),
+            Form(
+                key: _formKey,
+                child: formReceiveAmount()
             ),
 
             SizedBox(height: 20.0),
@@ -463,5 +573,36 @@ class _PosScanPageState extends State<PosScanPage> {
     }
   }
 
+  Widget formReceiveAmount(){
+    return TextFormField(
+      validator: RequiredValidator(
+          errorText:
+          AppLocalizations.of(context).translate("error_form_entry")),
+      controller: quantityController,
+      autofocus: false,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[600], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[400], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          hintText: AppLocalizations.of(context)
+              .translate("hint_quantity"),
+          hintStyle: TextStyle(color: Colors.grey[400])),
+    );
+  }
 
 }
