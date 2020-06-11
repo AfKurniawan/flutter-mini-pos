@@ -12,6 +12,7 @@ class ShopItemWidget extends StatefulWidget {
   Shops shops;
 
   ShopItemWidget({Key key, this.shops}) : super (key: key);
+
   @override
   _ShopItemWidgetState createState() => _ShopItemWidgetState();
 }

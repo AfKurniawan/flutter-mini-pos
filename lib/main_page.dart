@@ -142,7 +142,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: drawerMenu(),
-        appBar: myAppBar(),
+        //appBar: myAppBar(),
       body: widget.currenPage,
       bottomNavigationBar: flashyTabBar(),
     );

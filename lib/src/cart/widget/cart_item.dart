@@ -48,11 +48,10 @@ class _CartItemState extends State<CartItem> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: 4, vertical: 8),
+          horizontal: 4, vertical: 3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-
           widget.cart.image == "" ? noImage() :
           imageWidget(),
           SizedBox(width: 15),

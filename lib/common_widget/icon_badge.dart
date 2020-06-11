@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_deltaprima_pos/style/light_color.dart';
 
 class IconBadge extends StatefulWidget {
 
@@ -37,7 +38,7 @@ class _IconBadgeState extends State<IconBadge> {
       child: Container(
         padding: EdgeInsets.all(1),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: LightColor.purpleLight,
           borderRadius: BorderRadius.circular(6),
         ),
         constraints: BoxConstraints(
@@ -66,7 +67,7 @@ class _IconBadgeState extends State<IconBadge> {
       child: Container(
         padding: EdgeInsets.all(1),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: LightColor.purpleLight,
           borderRadius: BorderRadius.circular(6),
         ),
         constraints: BoxConstraints(
