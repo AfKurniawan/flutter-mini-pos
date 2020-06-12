@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/configs/route_arguments.dart';
-import 'package:flutter_deltaprima_pos/custom_route.dart';
-import 'package:flutter_deltaprima_pos/src/home/pages/home_page.dart';
-import 'package:flutter_deltaprima_pos/src/login/pages/login_page.dart';
-import 'package:flutter_deltaprima_pos/src/register/pages/register_page.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/create_shop.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/shop_details.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/shop_home.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/shop_list.dart';
+import 'package:flutter_mini_pos/configs/route_arguments.dart';
+import 'package:flutter_mini_pos/custom_route.dart';
+import 'package:flutter_mini_pos/src/home/pages/home_page.dart';
+import 'package:flutter_mini_pos/src/login/pages/login_page.dart';
+import 'package:flutter_mini_pos/src/register/pages/register_page.dart';
+import 'package:flutter_mini_pos/src/shop/pages/create_shop.dart';
+import 'package:flutter_mini_pos/src/shop/pages/shop_details.dart';
+import 'package:flutter_mini_pos/src/shop/pages/shop_home.dart';
+import 'package:flutter_mini_pos/src/shop/pages/shop_list.dart';
 
 class MyRoute{
   static Route<dynamic> generateRoute(RouteSettings settings) {

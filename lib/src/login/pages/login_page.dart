@@ -1,8 +1,8 @@
-import 'package:flutter_deltaprima_pos/Animation/FadeAnimation.dart';
+import 'package:flutter_mini_pos/Animation/FadeAnimation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/src/login/services/login_service.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/localization/localization.dart';
+import 'package:flutter_mini_pos/src/login/services/login_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {

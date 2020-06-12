@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/configs/app_config.dart';
+import 'package:flutter_mini_pos/configs/app_config.dart';
 
 class CustomDialogSuccess extends StatelessWidget {
   final String title, description, buttonText;

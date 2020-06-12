@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
-import 'package:flutter_deltaprima_pos/src/shop/widget/custom_float.dart';
-import 'package:flutter_deltaprima_pos/src/shop/widget/grid_product.dart';
-import 'package:flutter_deltaprima_pos/src/shop/widget/shop_item_widget.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
-import 'package:flutter_deltaprima_pos/style/text_styles.dart';
-import 'package:flutter_deltaprima_pos/style/theme.dart';
-import 'package:flutter_deltaprima_pos/style/extention.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
+import 'package:flutter_mini_pos/src/shop/widget/custom_float.dart';
+import 'package:flutter_mini_pos/src/shop/widget/grid_product.dart';
+import 'package:flutter_mini_pos/src/shop/widget/shop_item_widget.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/style/text_styles.dart';
+import 'package:flutter_mini_pos/style/theme.dart';
+import 'package:flutter_mini_pos/style/extention.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

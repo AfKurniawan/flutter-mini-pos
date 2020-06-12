@@ -1,23 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/animation/FadeAnimation.dart';
-import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/main_page.dart';
-import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
-import 'package:flutter_deltaprima_pos/src/cart/services/delete_cart_service.dart';
-import 'package:flutter_deltaprima_pos/src/cart/services/total_cart_service.dart';
-import 'package:flutter_deltaprima_pos/src/cart/widget/cart_item.dart';
-import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
+import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/localization/localization.dart';
+import 'package:flutter_mini_pos/main_page.dart';
+import 'package:flutter_mini_pos/src/cart/models/cart_list_model.dart';
+import 'package:flutter_mini_pos/src/cart/services/delete_cart_service.dart';
+import 'package:flutter_mini_pos/src/cart/services/total_cart_service.dart';
+import 'package:flutter_mini_pos/src/cart/widget/cart_item.dart';
+import 'package:flutter_mini_pos/src/pos/services/get_label_count_service.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
 import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_deltaprima_pos/style/extention.dart';
+import 'package:flutter_mini_pos/style/extention.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

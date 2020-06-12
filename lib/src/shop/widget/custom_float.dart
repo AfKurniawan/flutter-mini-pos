@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/style/theme.dart';
+import 'package:flutter_mini_pos/style/theme.dart';
 
 class CustomFloat extends StatelessWidget {
   final IconData icon;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
-import 'package:flutter_deltaprima_pos/src/shop/widget/custom_float.dart';
-import 'package:flutter_deltaprima_pos/style/theme.dart';
+import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
+import 'package:flutter_mini_pos/src/shop/widget/custom_float.dart';
+import 'package:flutter_mini_pos/style/theme.dart';
 
 class ShopHomePage extends StatefulWidget {
 

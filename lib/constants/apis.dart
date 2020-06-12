@@ -1,9 +1,10 @@
 class Api {
 
-  static const String BASE_URL = "http://192.168.43.239/api_ci/index.php/";
+  //static const String BASE_URL = "http://192.168.43.177/api_ci/index.php/";
+  static const String BASE_URL = "http://192.168.43.177/api-minipos/index.php/";
   //static const String BASE_URL = "http://192.168.13.10/api_ci/index.php/";
-  static const String PRODUCTS_IMAGES_URL = "http://192.168.43.239/api_ci/uploads/products/";
-  static const String LOGIN_URL = BASE_URL + "LoginUser";
+  static const String PRODUCTS_IMAGES_URL = "http://192.168.43.177/api-minipos/uploads/products/";
+  static const String LOGIN_URL = BASE_URL + "loginuser";
   static const String REGISTER_URL = BASE_URL + "RegisterUser";
   static const String CREATE_SHOP_URL = BASE_URL + "CreateShop";
   static const String GET_SHOP_LIST = BASE_URL + "getShopList";

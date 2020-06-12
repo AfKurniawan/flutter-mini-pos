@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
 
 class IconBadge extends StatefulWidget {
 

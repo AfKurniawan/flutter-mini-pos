@@ -1,5 +1,5 @@
-import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
-import 'package:flutter_deltaprima_pos/src/cart/models/total_cart_model.dart';
+import 'package:flutter_mini_pos/src/cart/models/cart_list_model.dart';
+import 'package:flutter_mini_pos/src/cart/models/total_cart_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

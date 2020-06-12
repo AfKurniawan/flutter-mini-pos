@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/custom_route.dart';
-import 'package:flutter_deltaprima_pos/main_page.dart';
-import 'package:flutter_deltaprima_pos/splash_page.dart';
-import 'package:flutter_deltaprima_pos/src/cart/pages/cart_list_page.dart';
-import 'package:flutter_deltaprima_pos/src/home/pages/home_page.dart';
-import 'package:flutter_deltaprima_pos/src/login/pages/login_page.dart';
-import 'package:flutter_deltaprima_pos/src/pos/pages/pos_scan_page.dart';
-import 'package:flutter_deltaprima_pos/src/products/pages/detail_product_page.dart';
-import 'package:flutter_deltaprima_pos/src/products/pages/scan_products_page.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/shop_details.dart';
-import 'package:flutter_deltaprima_pos/src/shop/pages/shop_list.dart';
+import 'package:flutter_mini_pos/custom_route.dart';
+import 'package:flutter_mini_pos/main_page.dart';
+import 'package:flutter_mini_pos/src/cart/pages/cart_list_page.dart';
+import 'package:flutter_mini_pos/src/home/pages/home_page.dart';
+import 'package:flutter_mini_pos/src/login/pages/login_page.dart';
+import 'package:flutter_mini_pos/src/pos/pages/pos_scan_page.dart';
+import 'package:flutter_mini_pos/src/products/pages/detail_product_page.dart';
+import 'package:flutter_mini_pos/src/products/pages/scan_products_page.dart';
+import 'package:flutter_mini_pos/src/shop/pages/shop_details.dart';
+import 'package:flutter_mini_pos/src/shop/pages/shop_list.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getRoute() {
@@ -46,7 +45,7 @@ class Routes {
 
       case "detail_product":
         return CustomRoute<bool>(
-          builder: (BuildContext context) => DetailProductPage(product: settings.arguments)
+          builder: (BuildContext context) => DetailProductPage(model: settings.arguments)
         );
 
       case 'main_page':

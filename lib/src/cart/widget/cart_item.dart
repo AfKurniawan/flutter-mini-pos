@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/src/cart/models/cart_list_model.dart';
-import 'package:flutter_deltaprima_pos/src/cart/pages/cart_list_page.dart';
-import 'package:flutter_deltaprima_pos/src/cart/services/delete_cart_service.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/src/cart/models/cart_list_model.dart';
+import 'package:flutter_mini_pos/src/cart/pages/cart_list_page.dart';
+import 'package:flutter_mini_pos/src/cart/services/delete_cart_service.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
 import 'package:http/http.dart';
 
 class CartItem extends StatefulWidget {

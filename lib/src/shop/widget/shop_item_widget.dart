@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/configs/route_arguments.dart';
-import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
-import 'package:flutter_deltaprima_pos/style/extention.dart';
-import 'package:flutter_deltaprima_pos/style/text_styles.dart';
+import 'package:flutter_mini_pos/configs/route_arguments.dart';
+import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/style/extention.dart';
+import 'package:flutter_mini_pos/style/text_styles.dart';
 
 class ShopItemWidget extends StatefulWidget {
 

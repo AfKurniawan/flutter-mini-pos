@@ -1,4 +1,4 @@
-import 'package:flutter_deltaprima_pos/src/login/models/login_model.dart';
+import 'package:flutter_mini_pos/src/login/models/login_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

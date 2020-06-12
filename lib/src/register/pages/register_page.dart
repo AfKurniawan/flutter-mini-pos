@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_deltaprima_pos/Animation/FadeAnimation.dart';
+import 'package:flutter_mini_pos/Animation/FadeAnimation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/dialogs/CustomDialogError.dart';
-import 'package:flutter_deltaprima_pos/dialogs/CustomDialogSuccess.dart';
-import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/src/register/services/register_service.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/dialogs/CustomDialogError.dart';
+import 'package:flutter_mini_pos/dialogs/CustomDialogSuccess.dart';
+import 'package:flutter_mini_pos/localization/localization.dart';
+import 'package:flutter_mini_pos/src/register/services/register_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_deltaprima_pos/animation/FadeAnimation.dart';
-import 'package:flutter_deltaprima_pos/common_widget/icon_badge.dart';
-import 'package:flutter_deltaprima_pos/constants/apis.dart';
-import 'package:flutter_deltaprima_pos/localization/localization.dart';
-import 'package:flutter_deltaprima_pos/src/pos/services/add_cart_service.dart';
-import 'package:flutter_deltaprima_pos/src/pos/services/get_label_count_service.dart';
-import 'package:flutter_deltaprima_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
-import 'package:flutter_deltaprima_pos/src/products/models/products_model.dart';
-import 'package:flutter_deltaprima_pos/src/products/services/get_products_service.dart';
-import 'package:flutter_deltaprima_pos/src/shop/models/shop_list_model.dart';
-import 'package:flutter_deltaprima_pos/style/light_color.dart';
-import 'package:flutter_deltaprima_pos/style/text_styles.dart';
+import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
+import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
+import 'package:flutter_mini_pos/constants/apis.dart';
+import 'package:flutter_mini_pos/localization/localization.dart';
+import 'package:flutter_mini_pos/src/pos/services/add_cart_service.dart';
+import 'package:flutter_mini_pos/src/pos/services/get_label_count_service.dart';
+import 'package:flutter_mini_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
+import 'package:flutter_mini_pos/src/products/models/products_model.dart';
+import 'package:flutter_mini_pos/src/products/services/get_products_service.dart';
+import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
+import 'package:flutter_mini_pos/style/light_color.dart';
+import 'package:flutter_mini_pos/style/text_styles.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter_deltaprima_pos/style/extention.dart';
+import 'package:flutter_mini_pos/style/extention.dart';
 
 class DetailProductPage extends StatefulWidget {
 
