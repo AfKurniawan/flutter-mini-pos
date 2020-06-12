@@ -37,7 +37,7 @@ class _CartItemState extends State<CartItem> {
       if(response.error == false){
         setState(() {
           print("DELETETETETETETETETETET");
-          Navigator.pushReplacementNamed(context, '/cart_page');
+          Navigator.pushReplacementNamed(context, 'cart_page');
         });
       }
     });

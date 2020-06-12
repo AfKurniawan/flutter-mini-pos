@@ -10,7 +10,7 @@ import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
 import 'package:flutter_mini_pos/constants/apis.dart';
 import 'package:flutter_mini_pos/src/cart/pages/cart_list_page.dart';
 import 'package:flutter_mini_pos/src/home/pages/home_page.dart';
-import 'package:flutter_mini_pos/src/pos/pages/pos_scan_page.dart';
+import 'package:flutter_mini_pos/src/products/pages/product_list_page.dart';
 import 'package:flutter_mini_pos/src/pos/services/get_label_count_service.dart';
 import 'package:flutter_mini_pos/src/register/pages/register_page.dart';
 import 'package:flutter_mini_pos/src/shop/pages/create_shop.dart';
@@ -115,7 +115,7 @@ class _MainPageState extends State<MainPage> {
       switch (tabItem) {
         case 0 :
           widget.currentTitle = "POS";
-          widget.currenPage = PosScanPage();
+          widget.currenPage = ProductListPage();
           getLabelCartCount();
           //startTimer();
           break;

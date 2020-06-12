@@ -44,7 +44,6 @@ class _CartListPageState extends State<CartListPage> {
   LabelCountService labelCountService;
   String labelcartcount;
 
-
   @override
   void initState() {
     super.initState();
@@ -70,11 +69,9 @@ class _CartListPageState extends State<CartListPage> {
 
   getLabelCartCount() async {
     print("Get Label Cart count Start");
-    labelCountService.getLabelCount(Api.GET_LABEL_COUNT, {
-      'user_id' : userid,
-      'shop_id' : shopid
-    }).then((response){
-      if(response.error == false){
+    labelCountService.getLabelCount(Api.GET_LABEL_COUNT,
+        {'user_id': userid, 'shop_id': shopid}).then((response) {
+      if (response.error == false) {
         setState(() {
           labelcartcount = response.count.count;
           print("Total Cart MAIN PAGE $labelcartcount");
@@ -97,8 +94,8 @@ class _CartListPageState extends State<CartListPage> {
   }
 
   void getTotalCart() async {
-    totalCartService.getTotalCart(
-        Api.GET_TOTAL_CART, {'user_id': userid, 'shop_id': shopid}).then((response) {
+    totalCartService.getTotalCart(Api.GET_TOTAL_CART,
+        {'user_id': userid, 'shop_id': shopid}).then((response) {
       if (response.error == false) {
         setState(() {
           totalcart = response.totals.total;
@@ -107,8 +104,6 @@ class _CartListPageState extends State<CartListPage> {
       }
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +178,7 @@ class _CartListPageState extends State<CartListPage> {
                       Radius.circular(5.0),
                     ),
                   ),
-                  child: newReceiveAmountWidget(),
+                  child: formReceiveAmount(),
                 ),
               ),
               Row(
@@ -201,9 +196,9 @@ class _CartListPageState extends State<CartListPage> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        totalcart == ""
+                        totalcart == null
                             ? Text(
-                                "Menghitung",
+                                "Rp. 0",
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w900,
@@ -253,33 +248,34 @@ class _CartListPageState extends State<CartListPage> {
     );
   }
 
-
-  Widget myAppBar(){
+  Widget myAppBar() {
     return new AppBar(
       centerTitle: true,
-      title: Text("Checkout",
+      title: Text(
+        "Checkout",
         style: TextStyle(color: Colors.black),
       ),
       elevation: 1,
       backgroundColor: Theme.of(context).backgroundColor,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios,
-          color: LightColor.grey,
-        ),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: LightColor.grey,
+          ),
           onPressed: () {
-            Navigator
-                .pushReplacement(
+            Navigator.pushReplacement(
               context,
-              new MaterialPageRoute(builder: (context) => new MainPage(currentTab: 0)),
+              new MaterialPageRoute(
+                  builder: (context) => new MainPage(currentTab: 0)),
             ).then((value) {
               setState(() {
                 labelcartcount = labelcartcount;
               });
             });
-          }
-      ),
+          }),
       actions: <Widget>[
-        FadeAnimation(1,
+        FadeAnimation(
+          1,
           IconButton(
             icon: IconBadge(
               icon: LineariconsFree.cart,
@@ -298,10 +294,10 @@ class _CartListPageState extends State<CartListPage> {
 //            color: LightColor.grey,
 //          ),
 //        ),
-        FadeAnimation(3,
+        FadeAnimation(
+          3,
           ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(13)
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(13)),
             child: Container(
               // height: 40,
               // width: 40,
@@ -316,48 +312,11 @@ class _CartListPageState extends State<CartListPage> {
     );
   }
 
-  Widget receiveAmountWidget(){
-    return TextField(
-      style: TextStyle(
-        fontSize: 15.0,
-        color: Colors.black,
-      ),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(10.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.grey[100],
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey[100],
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        hintText: "Receive Amount",
-        prefixIcon: Icon(
-          FontAwesomeIcons.moneyCheck,
-          color: LightColor.grey,
-        ),
-        hintStyle: TextStyle(
-          fontSize: 15.0,
-          color: LightColor.grey,
-        ),
-      ),
-      maxLines: 1,
-      controller: _couponlControl,
-    );
-
-  }
-
-  Widget newReceiveAmountWidget(){
+  Widget formReceiveAmount() {
     return TextFormField(
       validator: RequiredValidator(
           errorText:
-          AppLocalizations.of(context).translate("error_form_entry")),
-      autofocus: true,
+              AppLocalizations.of(context).translate("error_form_entry")),
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -377,8 +336,7 @@ class _CartListPageState extends State<CartListPage> {
             borderSide: BorderSide(color: Colors.red[300], width: 1.5),
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-          hintText: AppLocalizations.of(context)
-              .translate("hint_quantity"),
+          hintText: AppLocalizations.of(context).translate("hint_quantity"),
           hintStyle: TextStyle(color: Colors.grey[400])),
     );
   }
@@ -387,8 +345,21 @@ class _CartListPageState extends State<CartListPage> {
     return FutureBuilder(
         future: getCartList(),
         builder: (context, snapshot) {
-          return snapshot.data != null
-              ? buildListView(snapshot.data)
+          return snapshot.connectionState == ConnectionState.done
+              ? snapshot.hasData
+                  ? buildListView(snapshot.data)
+                  : Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.remove_shopping_cart, size: 40),
+                            SizedBox(height: 22),
+                            Text("Cart is Empty"),
+                          ],
+                        ),
+                      ))
               : Container(
                   height: MediaQuery.of(context).size.height / 2,
                   child: Center(

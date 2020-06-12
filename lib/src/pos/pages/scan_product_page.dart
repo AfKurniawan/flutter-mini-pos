@@ -12,21 +12,22 @@ import 'package:flutter_mini_pos/src/products/services/get_products_service.dart
 import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_mini_pos/style/light_color.dart';
 import 'package:flutter_mini_pos/style/text_styles.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_mini_pos/style/extention.dart';
 
-class DetailProductPage extends StatefulWidget {
+class ScanProductPage extends StatefulWidget {
 
-  DetailProductPage({Key key, this.model}) : super(key: key);
+  ScanProductPage({Key key, this.model}) : super(key: key);
   final Shops model;
 
   @override
-  _DetailProductPageState createState() => _DetailProductPageState();
+  _ScanProductPageState createState() => _ScanProductPageState();
 }
 
-class _DetailProductPageState extends State<DetailProductPage> {
+class _ScanProductPageState extends State<ScanProductPage> {
   bool isFav = false;
   GetProductService getProductService;
   AddCartService addCartService;
@@ -99,6 +100,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true);
     setState(() {
       barcode = takeBarcode;
+      quantityController.text = "";
       print("Barcode $barcode");
       Vibration.vibrate(duration: 100);
       getDetailProducts();
@@ -118,6 +120,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
           variant = response.item.variant;
           errorBarcode = false;
           isBtnScan = false;
+
 
         });
       } else if (response.error == true) {
@@ -164,7 +167,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
             startBarcodeScanStream();
           },
           btnNegativeCallback: (){
-            Navigator.pushReplacementNamed(context, '/cart_page');
+            Navigator.pushReplacementNamed(context, 'cart_page');
           }
       ),
     );
@@ -173,6 +176,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: myAppbar(),
         body: barcode == "" ? FadeAnimation(1,
             singleChildScrollView()
         )
@@ -276,33 +280,51 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
 
 
-  Widget myAppbar(){
-    return AppBar(
-      automaticallyImplyLeading: false,
+  Widget myAppbar() {
+    return new AppBar(
+      centerTitle: true,
+      title: Text(
+        "POS",
+        style: TextStyle(color: Colors.black),
+      ),
+      elevation: 1,
       backgroundColor: Theme.of(context).backgroundColor,
       leading: IconButton(
         icon: Icon(
-          Icons.arrow_back_ios,
-          color: LightColor.grey,
+          Icons.short_text,
+          size: 30,
+          color: Colors.black,
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Scaffold.of(context).openDrawer(),
       ),
-      centerTitle: true,
-      title: Text(
-        "Scan Barcode"
-      ),
-      elevation: 0.5,
       actions: <Widget>[
-        IconButton(
-          icon: IconBadge(
-            icon: Icons.shopping_cart,
-            size: 26.0,
-            count: labelcartcount,
+        FadeAnimation(
+          1,
+          IconButton(
+            icon: IconBadge(
+              icon: LineariconsFree.cart,
+              size: 24.0,
+              count: labelcartcount,
+            ),
+            color: LightColor.grey,
+            onPressed: () {
+              Navigator.pushNamed(context, "/cart_page");
+            },
           ),
-          color: LightColor.grey,
-          onPressed: () {
-            Navigator.pushNamed(context, "/cart_page");
-          },
+        ),
+        FadeAnimation(
+          2,
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(13)),
+            child: Container(
+              // height: 40,
+              // width: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+              ),
+              child: Image.asset("assets/images/user.png", fit: BoxFit.fill),
+            ),
+          ).p(8),
         ),
       ],
     );

@@ -261,6 +261,7 @@
 //
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_mini_pos/src/products/models/products_model.dart';
 import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
 import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
 import 'package:flutter_mini_pos/constants/apis.dart';
@@ -286,16 +287,16 @@ import 'package:vibration/vibration.dart';
 
 
 
-class PosScanPage extends StatefulWidget {
-  PosScanPage({Key key, this.model, this.item}) : super(key: key);
+class ProductListPage extends StatefulWidget {
+  ProductListPage({Key key, this.model, this.item}) : super(key: key);
   final Shops model;
-  final Cart item;
+  final ProductsModel item;
 
   @override
-  _PosScanPageState createState() => new _PosScanPageState();
+  _ProductListPageState createState() => new _ProductListPageState();
 }
 
-class _PosScanPageState extends State<PosScanPage> {
+class _ProductListPageState extends State<ProductListPage> {
 
   TextEditingController controller = new TextEditingController();
   TextEditingController quantityController = new TextEditingController();
@@ -368,7 +369,7 @@ class _PosScanPageState extends State<PosScanPage> {
   Future<List<Cart>> getUserDetails() async {
     var res = await http.post(Uri.encodeFull(Api.GET_CART_LIST),
         headers: {"Accept": "application/json"},
-        body: {'userid': '1', 'shopid': '1'});
+        body: {'userid': userid, 'shopid': shopid});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
       var rest = data["cart"] as List;
@@ -377,89 +378,6 @@ class _PosScanPageState extends State<PosScanPage> {
     }
     return _userDetails;
   }
-
-  void getDetailProducts() async {
-    getProductService.getProduct(Api.GET_PRODUCTS_DETAIL,
-        {'shop_id': shopid, 'barcode': barcode}).then((response) {
-      if (response.error == false) {
-        setState(() {
-          name = response.item.name;
-          images = response.item.image;
-          price = response.item.sellingPrice;
-          productid = response.item.id;
-          variant = response.item.variant;
-          errorBarcode = false;
-          isBtnScan = false;
-          Navigator.pushNamed(context, 'detail_product');
-        });
-      } else if (response.error == true) {
-        print("RESPONSE MESSAGES ${response.messages}");
-        setState(() {
-          errorBarcode = true;
-        });
-      }
-    });
-  }
-  void addToCart() async {
-    addCartService.insertCart(Api.INSERT_CART_URL, {
-      'product_id': productid,
-      'quantity': quantityController.text,
-      'shop_id': shopid,
-      'user_id': userid,
-      'price': price,
-      'status': 'onCart'
-    }).then((response) {
-      if (response.error == false) {
-        setState(() {
-          labelcartcount = labelcartcount;
-          print("Sukses insert to Cart");
-          Navigator.pushReplacement(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => new MainPage(currentTab: 0)),
-          ).then((value) {
-            setState(() {
-              labelcartcount = labelcartcount;
-            });
-          });
-          dialogSuccess(context);
-        });
-      }
-    });
-  }
-
-  dialogSuccess(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) => CustomDialogSuccessAddCart(
-          title: "Berhasil",
-          description: "Produk sudah berhasil masuk di cart... Scan lagi ??",
-          buttonPositiveText: "Tambah Barang",
-          buttonNegativeText: "Lihat Cart",
-          btnPositiveCallBack: () {
-            Navigator.of(context).pop();
-            startBarcodeScanStream();
-          },
-          btnNegativeCallback: () {
-            Navigator.pushReplacementNamed(context, '/cart_page');
-          }),
-    );
-  }
-
-  startBarcodeScanStream() async {
-    takeBarcode =
-        await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true);
-    setState(() {
-      barcode = takeBarcode;
-      print("Barcode $barcode");
-      Vibration.vibrate(duration: 100);
-      //getDetailProducts();
-      Navigator.pushNamed(context, '/detail_product', arguments: widget.item);
-      labelcartcount = labelcartcount;
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -479,22 +397,17 @@ class _PosScanPageState extends State<PosScanPage> {
         ],
       ),
 
-//      bottomNavigationBar: isBtnScan == true
-//            ? Padding(
-//                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
-//                child: scanButtonNew(),
-//              )
-//            : Padding(
-//                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
-//                child: addCartButton(),
-//      ),
+      bottomNavigationBar: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
+                child: scanButtonNew(),
+              )
     );
   }
 
   Widget scanButtonNew() {
     return InkWell(
       onTap: () {
-        startBarcodeScanStream();
+        Navigator.pushNamed(context, 'scan_product');
       },
       splashColor: Color.fromRGBO(143, 148, 251, 1),
       child: Container(
@@ -517,36 +430,7 @@ class _PosScanPageState extends State<PosScanPage> {
   }
 
 
-  Widget addCartButton() {
-    return InkWell(
-      onTap: () {
-        print("Button Register clicked");
-        if (_formKey.currentState.validate()) {
-          print("Validator Valid");
-          setState(() {
-            addToCart();
-          });
-        }
-      },
-      splashColor: Color.fromRGBO(143, 148, 251, 1),
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(colors: [
-              Color.fromRGBO(143, 148, 251, 1),
-              Color.fromRGBO(143, 148, 251, .6),
-            ])),
-        child: Center(
-          child: Text(
-            "Add to Cart",
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget myAppbar() {
     return new AppBar(
@@ -576,7 +460,7 @@ class _PosScanPageState extends State<PosScanPage> {
             ),
             color: LightColor.grey,
             onPressed: () {
-              Navigator.pushNamed(context, "/cart_page");
+              Navigator.pushNamed(context, "cart_page");
             },
           ),
         ),
@@ -637,7 +521,7 @@ class _PosScanPageState extends State<PosScanPage> {
               child: Icon(FontAwesome5.barcode, color: LightColor.purple)
                   .alignCenter
                   .ripple(() {
-                startBarcodeScanStream();
+                Navigator.pushNamed(context, 'scan_product');
               }, borderRadius: BorderRadius.circular(13))),
         ),
       ),
@@ -697,8 +581,20 @@ class _PosScanPageState extends State<PosScanPage> {
     return FutureBuilder(
         future: getUserDetails(),
         builder: (context, snapshot) {
-          return snapshot.data != null
+          return snapshot.connectionState == ConnectionState.done ? snapshot.hasData
               ? buildListView(_userDetails)
+          : Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.remove_shopping_cart, size: 40),
+                    SizedBox(height: 22),
+                    Text("Product is Empty"),
+                  ],
+                ),
+              ))
               : Container(
                   height: MediaQuery.of(context).size.height / 2,
                   child: Center(

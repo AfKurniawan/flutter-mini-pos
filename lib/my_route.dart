@@ -4,9 +4,8 @@ import 'package:flutter_mini_pos/main_page.dart';
 import 'package:flutter_mini_pos/src/cart/pages/cart_list_page.dart';
 import 'package:flutter_mini_pos/src/home/pages/home_page.dart';
 import 'package:flutter_mini_pos/src/login/pages/login_page.dart';
-import 'package:flutter_mini_pos/src/pos/pages/pos_scan_page.dart';
-import 'package:flutter_mini_pos/src/products/pages/detail_product_page.dart';
-import 'package:flutter_mini_pos/src/products/pages/scan_products_page.dart';
+import 'package:flutter_mini_pos/src/pos/pages/scan_product_page.dart';
+import 'package:flutter_mini_pos/src/products/pages/product_list_page.dart';
 import 'package:flutter_mini_pos/src/shop/pages/shop_details.dart';
 import 'package:flutter_mini_pos/src/shop/pages/shop_list.dart';
 
@@ -15,10 +14,11 @@ class Routes {
     return <String, WidgetBuilder>{
       '/': (_) => LoginPage(),
       '/home': (_) => Homepage(),
-      '/cart_page'  : (_) => CartListPage(),
+      'cart_page'  : (_) => CartListPage(),
      // '/main_page'  : (_) => MainPage(),
-   //   '/login_page' : (_) => LoginPage(),
-      '/shop_list_page' : (_) => ShopListPage()
+     //   '/login_page' : (_) => LoginPage(),
+      '/shop_list_page' : (_) => ShopListPage(),
+      'scan_product' : (_) => ScanProductPage()
     };
   }
 
@@ -33,20 +33,13 @@ class Routes {
             builder: (BuildContext context) => ShopDetailPage(model: settings.arguments)
         );
 
-      case "products":
+
+      case "product_list":
         return CustomRoute<bool>(
-          builder: (BuildContext context) => ScanProductPage(model: settings.arguments)
+          builder: (BuildContext context) => ProductListPage(model: settings.arguments)
         );
 
-      case "pos_scan_product":
-        return CustomRoute<bool>(
-          builder: (BuildContext context) => PosScanPage(model: settings.arguments)
-        );
 
-      case "detail_product":
-        return CustomRoute<bool>(
-          builder: (BuildContext context) => DetailProductPage(model: settings.arguments)
-        );
 
       case 'main_page':
         return MaterialPageRoute(
