@@ -260,7 +260,6 @@
 //  }
 //
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_mini_pos/src/products/models/products_model.dart';
 import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
 import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
@@ -273,6 +272,7 @@ import 'package:flutter_mini_pos/src/pos/services/add_cart_service.dart';
 import 'package:flutter_mini_pos/src/pos/services/get_label_count_service.dart';
 import 'package:flutter_mini_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_mini_pos/src/products/services/get_products_service.dart';
+import 'package:flutter_mini_pos/src/products/widget/product_item.dart';
 import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
 import 'package:flutter_mini_pos/style/light_color.dart';
 import 'package:flutter_mini_pos/style/text_styles.dart';
@@ -301,8 +301,8 @@ class _ProductListPageState extends State<ProductListPage> {
   TextEditingController controller = new TextEditingController();
   TextEditingController quantityController = new TextEditingController();
 
-  List<Cart> _searchResult = [];
-  List<Cart> _userDetails = [];
+  List<Item> _searchResult = [];
+  List<Item> productList = [];
 
   SharedPreferences prefs;
 
@@ -334,7 +334,7 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   void initState() {
     isBtnScan = true;
-    getUserDetails();
+    getProductList();
     getPrefs();
     labelCountService = new LabelCountService();
     getProductService = new GetProductService();
@@ -366,17 +366,17 @@ class _ProductListPageState extends State<ProductListPage> {
     });
   }
 
-  Future<List<Cart>> getUserDetails() async {
-    var res = await http.post(Uri.encodeFull(Api.GET_CART_LIST),
+  Future<List<Item>> getProductList() async {
+    var res = await http.post(Uri.encodeFull(Api.GET_PRODUCT_LIST),
         headers: {"Accept": "application/json"},
-        body: {'userid': userid, 'shopid': shopid});
+        body: {'shopid': shopid});
     if (res.statusCode == 200) {
       var data = json.decode(res.body);
-      var rest = data["cart"] as List;
+      var rest = data["product"] as List;
       print(res.body);
-      _userDetails = rest.map<Cart>((j) => Cart.fromJson(j)).toList();
+      productList = rest.map<Item>((j) => Item.fromJson(j)).toList();
     }
-    return _userDetails;
+    return productList;
   }
 
   @override
@@ -579,10 +579,10 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Widget futureBuilder() {
     return FutureBuilder(
-        future: getUserDetails(),
+        future: getProductList(),
         builder: (context, snapshot) {
           return snapshot.connectionState == ConnectionState.done ? snapshot.hasData
-              ? buildListView(_userDetails)
+              ? buildListView(productList)
           : Container(
               height: MediaQuery.of(context).size.height / 2,
               child: Center(
@@ -607,13 +607,13 @@ class _ProductListPageState extends State<ProductListPage> {
         });
   }
 
-  Widget buildListView(_userDetails) {
+  Widget buildListView(productList) {
     return new ListView.builder(
-      itemCount: _userDetails.length,
+      itemCount: productList.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-          child: CartItem(cart: _userDetails.elementAt(index)),
+          child: ProductItem(product: productList.elementAt(index)),
         );
       },
     );
@@ -625,7 +625,7 @@ class _ProductListPageState extends State<ProductListPage> {
       itemBuilder: (context, i) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-          child: CartItem(cart: _searchResult.elementAt(i)),
+          child: ProductItem(product: _searchResult.elementAt(i)),
         );
       },
     );
@@ -640,9 +640,9 @@ class _ProductListPageState extends State<ProductListPage> {
       return;
     }
 
-    _userDetails.forEach((userDetail) {
-      if (userDetail.name.contains(text) ||
-          userDetail.sellingPrice.contains(text)) _searchResult.add(userDetail);
+    productList.forEach((item) {
+      if (item.name.contains(text) ||
+          item.sellingPrice.contains(text)) _searchResult.add(item);
     });
 
     setState(() {});

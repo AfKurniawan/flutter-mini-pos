@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mini_pos/custom_route.dart';
+import 'package:flutter_mini_pos/src/products/pages/detail_product_page.dart';
+import 'package:flutter_mini_pos/custom_route.dart';
 import 'package:flutter_mini_pos/main_page.dart';
 import 'package:flutter_mini_pos/src/cart/pages/cart_list_page.dart';
 import 'package:flutter_mini_pos/src/home/pages/home_page.dart';
@@ -37,6 +39,11 @@ class Routes {
       case "product_list":
         return CustomRoute<bool>(
           builder: (BuildContext context) => ProductListPage(model: settings.arguments)
+        );
+
+      case "product_detail":
+        return CustomRoute<bool>(
+          builder: (BuildContext context) => DetailProductPage(item: settings.arguments)
         );
 
 
