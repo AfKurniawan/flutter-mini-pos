@@ -92,7 +92,7 @@ class _ProductItemState extends State<ProductItem> {
               Expanded(
                 child: InkWell(
                   onTap: (){
-                    Navigator.pushNamed(context, "/product_detail", arguments: widget.product);
+                    Navigator.pushNamed(context, "/product_detail_new", arguments: widget.product);
                   },
                   child: Container(
                     child: Column(

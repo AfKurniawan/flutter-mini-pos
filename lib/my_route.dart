@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mini_pos/custom_route.dart';
+import 'package:flutter_mini_pos/splash_page.dart';
+import 'package:flutter_mini_pos/src/products/pages/detail_product_new.dart';
 import 'package:flutter_mini_pos/src/products/pages/detail_product_page.dart';
 import 'package:flutter_mini_pos/custom_route.dart';
 import 'package:flutter_mini_pos/main_page.dart';
@@ -14,13 +16,12 @@ import 'package:flutter_mini_pos/src/shop/pages/shop_list.dart';
 class Routes {
   static Map<String, WidgetBuilder> getRoute() {
     return <String, WidgetBuilder>{
-      '/': (_) => LoginPage(),
+      '/' : (_) => SplashPage(),
+     '/login_page' : (_) => LoginPage(),
       '/home': (_) => Homepage(),
-      'cart_page'  : (_) => CartListPage(),
-     // '/main_page'  : (_) => MainPage(),
-     //   '/login_page' : (_) => LoginPage(),
+      '/cart_page'  : (_) => CartListPage(),
       '/shop_list_page' : (_) => ShopListPage(),
-      'scan_product' : (_) => ScanProductPage()
+      '/scan_product' : (_) => ScanProductPage()
     };
   }
 
@@ -46,6 +47,10 @@ class Routes {
           builder: (BuildContext context) => DetailProductPage(item: settings.arguments)
         );
 
+      case "product_detail_new":
+        return CustomRoute<bool>(
+            builder: (BuildContext context) => DetailProductPageNew(item: settings.arguments)
+        );
 
 
       case 'main_page':

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   startTime() async {
-    var duration = new Duration(seconds: 2);
+    var duration = new Duration(seconds: 5);
     return new Timer(duration, route);
   }
 
@@ -58,21 +57,15 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              child: Image.asset("assets/images/people_shop.png"),
+              height: 100,
+              child: Image.asset("assets/images/splash_logo.png"),
             ),
             Padding(padding: EdgeInsets.only(top: 20.0)),
-            Text(
-              "Splash Screen",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(top: 20.0)),
-            CircularProgressIndicator(
-              backgroundColor: Colors.white,
-              strokeWidth: 1,
-            )
+            SizedBox(height: 40),
+//            CircularProgressIndicator(
+//              backgroundColor: Colors.white,
+//              strokeWidth: 1,
+//            )
           ],
         ),
       ),

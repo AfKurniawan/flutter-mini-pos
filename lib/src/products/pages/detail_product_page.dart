@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
+import 'package:flutter_mini_pos/common_widget/form_field_widget.dart';
 import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
 import 'package:flutter_mini_pos/constants/apis.dart';
 import 'package:flutter_mini_pos/localization/localization.dart';
@@ -476,7 +477,11 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
             Form(
                 key: _formKey,
-                child: formReceiveAmount()
+                //child: formQuantity()
+              child: FormFieldWidget(
+                hint: AppLocalizations.of(context)
+                    .translate("hint_quantity"),
+              ),
             ),
 
             SizedBox(height: 20.0),
@@ -486,35 +491,4 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
   }
 
-  Widget formReceiveAmount(){
-    return TextFormField(
-      validator: RequiredValidator(
-          errorText:
-          AppLocalizations.of(context).translate("error_form_entry")),
-      controller: quantityController,
-      autofocus: false,
-      keyboardType: TextInputType.number,
-      textInputAction: TextInputAction.done,
-      decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[600], width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[400], width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red[300], width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          hintText: AppLocalizations.of(context)
-              .translate("hint_quantity"),
-          hintStyle: TextStyle(color: Colors.grey[400])),
-    );
-  }
 }

@@ -407,7 +407,7 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget scanButtonNew() {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, 'scan_product');
+        Navigator.pushNamed(context, '/scan_product');
       },
       splashColor: Color.fromRGBO(143, 148, 251, 1),
       child: Container(
@@ -460,7 +460,7 @@ class _ProductListPageState extends State<ProductListPage> {
             ),
             color: LightColor.grey,
             onPressed: () {
-              Navigator.pushNamed(context, "cart_page");
+              Navigator.pushNamed(context, "/cart_page");
             },
           ),
         ),
@@ -521,7 +521,7 @@ class _ProductListPageState extends State<ProductListPage> {
               child: Icon(FontAwesome5.barcode, color: LightColor.purple)
                   .alignCenter
                   .ripple(() {
-                Navigator.pushNamed(context, 'scan_product');
+                Navigator.pushNamed(context, '/scan_product');
               }, borderRadius: BorderRadius.circular(13))),
         ),
       ),
