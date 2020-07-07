@@ -19,7 +19,6 @@ class FormFieldWidget extends StatelessWidget {
           errorText:
           AppLocalizations.of(context).translate("error_form_entry")),
       controller: textEditingController,
-      autofocus: false,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -42,5 +41,9 @@ class FormFieldWidget extends StatelessWidget {
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey[400])),
     );
+  //formPhone(context);
   }
+
+
+
 }

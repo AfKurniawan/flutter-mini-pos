@@ -41,6 +41,8 @@ dependencies:
   flashy_tab_bar: ^0.0.3
   #flutter_icons: ^1.1.0
   fluttericon: ^1.0.7
+  #qr_flutter: ^1.1.1
+  flutter_svg: ^0.17.4
 
 dev_dependencies:
   flutter_test:

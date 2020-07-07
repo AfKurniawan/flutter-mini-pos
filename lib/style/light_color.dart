@@ -25,4 +25,9 @@ class LightColor {
 
   static const Color black = Color(0xff20262C);
   static const Color lightblack = Color(0xff5F5F60);
+
+  static const kPrimaryColor = Color(0xFFFFC61F);
+  static const ksecondaryColor = Color(0xFFB5BFD0);
+  static const kTextColor = Color(0xFF50505D);
+  static const kTextLightColor = Color(0xFF6A727D);
 }
