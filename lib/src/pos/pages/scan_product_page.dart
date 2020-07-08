@@ -121,14 +121,14 @@ class _ScanProductPageState extends State<ScanProductPage> {
           variant = response.item.variant;
           errorBarcode = false;
           isBtnScan = false;
-
-
         });
       } else if (response.error == true) {
         print("RESPONSE MESSAGES ${response.messages}");
         setState(() {
           errorBarcode = true;
         });
+      } else if (errorBarcode == true){
+        Navigator.pushReplacementNamed(context, '/product_list');
       }
     });
   }

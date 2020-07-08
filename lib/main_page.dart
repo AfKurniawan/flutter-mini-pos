@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:flashy_tab_bar/flashy_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

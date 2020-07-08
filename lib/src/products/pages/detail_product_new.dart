@@ -34,7 +34,7 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
   void initState() {
     labelCountService = new LabelCountService();
     item = widget.item;
-    mediaQuery = MediaQuery.of(context);
+    //mediaQuery = MediaQuery.of(context);
     super.initState();
     getPrefs();
   }
@@ -63,16 +63,16 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          return orientation == Orientation.portrait
-              ? verticalLayout()
-              : horizontalLayout();
-        },
-      ),
+    if(MediaQuery.of(context).orientation == Orientation.portrait){
+      return Scaffold(
+        body: verticalLayout(),
+      );
+    } else {
+      return Scaffold(
+        body: horizontalLayout(),
+      );
+    }
 
-    );
   }
 
   Widget verticalLayout(){
@@ -137,7 +137,7 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
             left: 0,
             right: 0,
             bottom: 0,
-            height: MediaQuery.of(context).size.height / 2,
+            height: MediaQuery.of(context).size.height / 2.1,
             child: FadeAnimation(
                 1.2,
                 Container(
@@ -175,23 +175,45 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
 
-                              FadeAnimation(
-                                1.4,
-                                Container(
-                                  child: Text(
-                                    "Rp. ${item.purchasePrice}",
-                                    style: TextStyle(
-                                        color: LightColor.purple,
-                                        height: 1.4,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold
+                              Divider(),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  FadeAnimation(
+                                    1.4,
+                                    Container(
+                                      child: Text(
+                                        "Rp. ${item.purchasePrice}",
+                                        style: TextStyle(
+                                            color: LightColor.purple,
+                                            height: 1.4,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  FadeAnimation(
+                                    1.3,
+                                    Text(
+                                      "Barcode: ${item.barcode}",
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(97, 90, 90, .54),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
                               ),
+
+
                               SizedBox(
-                                height: mediaQuery.size.height / 5,
+                                height: mediaQuery.size.height / 7,
                               ),
                               FadeAnimation(
                                   1.3,
@@ -231,7 +253,7 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: mediaQuery.size.height / 1.3,
+                  height: mediaQuery.size.height / 1.5,
                   child: FadeAnimation(
                       1.3,
                       Image.network(
@@ -240,48 +262,7 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
                       )),
                 ),
               ),
-              Positioned(
-                top: 20,
-                width: mediaQuery.size.width / 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: IconButton(
-                            icon: IconBadge(
-                              icon: LineariconsFree.cart,
-                              size: 24.0,
-                              count: labelcartcount,
-                            ),
-                            color: LightColor.grey,
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/cart_page");
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              myHorizontalAppbar(),
               Positioned(
                   left: 0,
                   right: 0,
@@ -304,16 +285,31 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-
-                                      FadeAnimation(
-                                        1.3,
-                                        Text(
-                                          item.variant,
-                                          style: TextStyle(
-                                            color: Color.fromRGBO(97, 90, 90, .54),
-                                            fontSize: 18,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          FadeAnimation(
+                                            1.3,
+                                            Text(
+                                              item.variant,
+                                              style: TextStyle(
+                                                color: Color.fromRGBO(97, 90, 90, .54),
+                                                fontSize: 18,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          FadeAnimation(
+                                            1.3,
+                                            Text(
+                                              "Barcode: ${item.barcode}",
+                                              style: TextStyle(
+                                                color: Color.fromRGBO(97, 90, 90, .54),
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+
+                                        ],
                                       ),
 
                                       Row(
@@ -332,8 +328,6 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
                                               ),
                                             ),
                                           ),
-
-
                                           FadeAnimation(
                                             1.4,
                                             Padding(
@@ -354,8 +348,6 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
 
                                         ],
                                       ),
-
-
 
                                       SizedBox(
                                         height: 20,
@@ -406,6 +398,51 @@ class _DetailProductPageNewState extends State<DetailProductPageNew> {
       ],
     );
 
+  }
+
+  Widget myHorizontalAppbar(){
+    return Positioned(
+      top: 20,
+      width: MediaQuery.of(context).size.width / 1,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: IconButton(
+                  icon: IconBadge(
+                    icon: LineariconsFree.cart,
+                    size: 24.0,
+                    count: labelcartcount,
+                  ),
+                  color: LightColor.grey,
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/cart_page");
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
 }

@@ -260,17 +260,14 @@
 //  }
 //
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_mini_pos/src/products/models/products_model.dart';
 import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
 import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
 import 'package:flutter_mini_pos/constants/apis.dart';
 import 'package:flutter_mini_pos/localization/localization.dart';
-import 'package:flutter_mini_pos/main_page.dart';
-import 'package:flutter_mini_pos/src/cart/models/cart_list_model.dart';
-import 'package:flutter_mini_pos/src/cart/widget/cart_item.dart';
 import 'package:flutter_mini_pos/src/pos/services/add_cart_service.dart';
 import 'package:flutter_mini_pos/src/pos/services/get_label_count_service.dart';
-import 'package:flutter_mini_pos/src/pos/widget/custom_dialog_success_add_cart.dart';
 import 'package:flutter_mini_pos/src/products/services/get_products_service.dart';
 import 'package:flutter_mini_pos/src/products/widget/product_item.dart';
 import 'package:flutter_mini_pos/src/shop/models/shop_list_model.dart';
@@ -288,9 +285,14 @@ import 'package:vibration/vibration.dart';
 
 
 class ProductListPage extends StatefulWidget {
-  ProductListPage({Key key, this.model, this.item}) : super(key: key);
+
+  ProductListPage({Key key, this.product, this.item, this.model}) : super(key: key);
+
   final Shops model;
   final ProductsModel item;
+  Item product;
+
+
 
   @override
   _ProductListPageState createState() => new _ProductListPageState();
@@ -379,30 +381,52 @@ class _ProductListPageState extends State<ProductListPage> {
     return productList;
   }
 
+  startBarcodeScanStream() async {
+    takeBarcode =
+    await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true);
+    setState(() {
+      barcode = takeBarcode;
+      quantityController.text = "";
+      print("Barcode $barcode");
+      Vibration.vibrate(duration: 100);
+       Navigator.pushNamed(context, "/product_detail_new", arguments: widget.product);
+      labelcartcount = labelcartcount;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: myAppbar(),
-      body: new Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          header(),
-          searchField(),
-          new Expanded(
-            child: _searchResult.length != 0 || controller.text.isNotEmpty
-                ? listViewSearchResults()
-                : futureBuilder(),
+    if(MediaQuery.of(context).orientation == Orientation.portrait){
+      return new Scaffold(
+          appBar: myAppbar(),
+          body: verticalLayout(),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
+            child: scanButtonNew(),
           )
-        ],
-      ),
+      );
+    } else {
+      return new Scaffold(
+          appBar: myAppbar(),
+          body: horizontalLayout(),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
+            child: FloatingActionButton(
+              backgroundColor: LightColor.purpleLight,
+              child: Icon(FontAwesome5.barcode),
+              onPressed: () {
+                Navigator.pushNamed(context, "/scan_product");
+              },
+            ),
+          )
+      );
+    }
 
-      bottomNavigationBar: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8, top: 8),
-                child: scanButtonNew(),
-              )
-    );
   }
+
+
 
   Widget scanButtonNew() {
     return InkWell(
@@ -484,12 +508,74 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Widget header() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text("Hello,", style: TextStyles.title.subTitleColor),
-        Text("FAJAR", style: TextStyles.h1Style),
-      ],
-    ).p16;
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Hello,", style: TextStyles.title.subTitleColor),
+            Text("$fullname", style: TextStyles.h1Style),
+          ],
+        ).p16 ;
+
+
+  }
+
+  Widget verticalLayout(){
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          header(),
+          searchField(),
+          new Expanded(
+            child: _searchResult.length != 0 || controller.text.isNotEmpty
+                ? listViewSearchResults()
+                : futureBuilder(),
+          )
+        ],
+      );
+
+  }
+
+  Widget horizontalLayout(){
+    return Padding(
+      padding: const EdgeInsets.only(left:18.0, right: 18),
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width /2.4,
+              child: ListView(
+                children: <Widget>[
+                  header(),
+                  searchField()
+                ],
+              ),
+
+            ),
+
+            Container(
+              height: MediaQuery.of(context).size.height /1.7,
+              width: 1,
+              color: LightColor.purple,
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width / 1.9,
+              child: Column(
+                children: <Widget>[
+                  new Expanded(
+                    child: _searchResult.length != 0 || controller.text.isNotEmpty
+                        ? listViewSearchResults()
+                        : futureBuilder(),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
   }
 
   Widget searchField() {

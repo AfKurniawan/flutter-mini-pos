@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mini_pos/animation/FadeAnimation.dart';
 import 'package:flutter_mini_pos/common_widget/icon_badge.dart';
@@ -18,7 +17,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_mini_pos/style/extention.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartListPage extends StatefulWidget {
@@ -198,21 +196,21 @@ class _CartListPageState extends State<CartListPage> {
                         ),
                         totalcart == null
                             ? Text(
-                                "Rp. 0",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w900,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              )
+                          "Rp. 0",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        )
                             : Text(
-                                "Rp.$totalcart",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w900,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
+                          "Rp.$totalcart",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
                         Text(
                           "Delivery charges included",
                           style: TextStyle(
@@ -316,7 +314,7 @@ class _CartListPageState extends State<CartListPage> {
     return TextFormField(
       validator: RequiredValidator(
           errorText:
-              AppLocalizations.of(context).translate("error_form_entry")),
+          AppLocalizations.of(context).translate("error_form_entry")),
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -347,28 +345,28 @@ class _CartListPageState extends State<CartListPage> {
         builder: (context, snapshot) {
           return snapshot.connectionState == ConnectionState.done
               ? snapshot.hasData
-                  ? buildListView(snapshot.data)
-                  : Container(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.remove_shopping_cart, size: 40),
-                            SizedBox(height: 22),
-                            Text("Cart is Empty"),
-                          ],
-                        ),
-                      ))
+              ? buildListView(snapshot.data)
               : Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: null,
-                      strokeWidth: 1.5,
-                    ),
-                  ),
-                );
+              height: MediaQuery.of(context).size.height / 2,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.remove_shopping_cart, size: 40),
+                    SizedBox(height: 22),
+                    Text("Cart is Empty"),
+                  ],
+                ),
+              ))
+              : Container(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Center(
+              child: CircularProgressIndicator(
+                value: null,
+                strokeWidth: 1.5,
+              ),
+            ),
+          );
         });
   }
 
